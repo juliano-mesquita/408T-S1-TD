@@ -4,6 +4,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter_towerdefense_game/game/component/background_component.dart';
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
+import 'package:flutter_towerdefense_game/models/map/tile_type.dart';
 
 class TowerDefenseGame extends FlameGame
 {
@@ -12,26 +13,26 @@ class TowerDefenseGame extends FlameGame
     // largura
     width: 6,
     // altura
-    height: 3,
+    height: 6,
     // O mapa em sí. Os pontos contendo o caminho são representados por 1
     points: [
-      0, 0, 0, 0, 3, 1,
-      0, 3, 1, 1, 2, 0,
-      1, 2, 0, 0, 0, 0,
+      TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass,
+      TileType.grass, TileType.road,  TileType.road,  TileType.road,  TileType.road,  TileType.road,
+      TileType.road,  TileType.road,  TileType.grass, TileType.grass, TileType.grass, TileType.grass,
+      TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass,
+      TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass,
+      TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass
     ]
   );
 
   @override
   Future<void> onLoad() async
   {
-    final backgroundImage = await Flame.images.load('floor/base_grass.png');
-    final backgroundSprite = Sprite(backgroundImage);
     await super.onLoad();
 
     add(
       BackgroundComponent(
-        mapObject: _map,
-        backgroundImage: backgroundImage
+        mapObject: _map
       )
         // ..sprite = backgroundSprite
         // Aonde renderizar relativo a tela(e ao anchor)

@@ -4,25 +4,25 @@ import 'package:flutter_towerdefense_game/game/tower/tower_attributes.dart';
 
 
 class TowerComponent extends SpriteComponent {
-  final String towertype;
+  final String towerType;
   final int tier;
   final double range;
   final double damage;
-  final Vector2 mappos;
+  final Vector2 mapPos;
   final TowerAttributes attributes;
 
   TowerComponent({
-    required this.towertype,
+    required this.towerType,
     required this.tier,
     required this.range,
     required this.damage,
-    required this.mappos,
+    required this.mapPos,
     required this.attributes,
   });
 
   @override
   String toString()
   {
-    return 'TowerComponent($towertype, $tier, $range, $damage, $mappos, $attributes)';
+    return 'TowerComponent($towerType, $tier, $range, $damage, $mapPos, $attributes)';
   }
 }

@@ -4,6 +4,6 @@ import 'package:flutter/material.dart';
 
 void main()
 {
-  final game = TowerDefenseGame();
+  final game = FlameGame();
   runApp(GameWidget(game: game));
 }

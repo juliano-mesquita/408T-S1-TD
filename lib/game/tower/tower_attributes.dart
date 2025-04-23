@@ -7,8 +7,8 @@ class TowerAttributes {
 
 enum TowerType
 {
-  nakedbear,
-  indianspearmale,
-  indiantorchfemale,
-  indianoca
+  nakedBear,
+  indianSpearMale,
+  indianTorchFemale,
+  indianOca
 }

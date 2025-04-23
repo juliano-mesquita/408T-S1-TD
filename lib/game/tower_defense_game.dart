@@ -1,8 +1,7 @@
 
 import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
-import 'package:flutter_towerdefense_game/game/component/background_component.dart';
+import 'package:flutter_towerdefense_game/game/component/map_component.dart';
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
 import 'package:flutter_towerdefense_game/models/map/tile_type.dart';
 
@@ -11,17 +10,18 @@ class TowerDefenseGame extends FlameGame
   // Instanciando o mapa
   static final _map = MapObject(
     // largura
-    width: 6,
+    width: 11,
     // altura
-    height: 6,
+    height: 7,
     // O mapa em sí. Os pontos contendo o caminho são representados por 1
     points: [
-      TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass,
-      TileType.grass, TileType.road,  TileType.road,  TileType.road,  TileType.road,  TileType.road,
-      TileType.road,  TileType.road,  TileType.grass, TileType.grass, TileType.grass, TileType.grass,
-      TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass,
-      TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass,
-      TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass
+      [TileType.grass, TileType.grass, TileType.road, TileType.road, TileType.road, TileType.road, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass],
+      [TileType.grass, TileType.grass, TileType.road,  TileType.grass,  TileType.grass, TileType.road, TileType.grass, TileType.road, TileType.road, TileType.road, TileType.grass],
+      [TileType.road,  TileType.road,  TileType.road,  TileType.grass, TileType.grass, TileType.road, TileType.grass, TileType.road, TileType.grass, TileType.road, TileType.grass],
+      [TileType.grass, TileType.grass, TileType.grass, TileType.road, TileType.road, TileType.road, TileType.road, TileType.road, TileType.grass, TileType.road, TileType.road],
+      [TileType.grass, TileType.grass, TileType.grass, TileType.road, TileType.grass, TileType.road, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass],
+      [TileType.grass, TileType.grass, TileType.grass, TileType.road, TileType.road, TileType.road, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass],
+      [TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass],
     ]
   );
 
@@ -31,17 +31,16 @@ class TowerDefenseGame extends FlameGame
     await super.onLoad();
 
     add(
-      BackgroundComponent(
+      MapComponent(
         mapObject: _map
       )
-        // ..sprite = backgroundSprite
-        // Aonde renderizar relativo a tela(e ao anchor)
+        // Where to render the map
         ..position = Vector2(0, 0)
-        // Largura do componente de mapa
+        // The width of the map
         ..width = size.x
-        // Altura do componente de mapa
+        // The height of the map
         ..height = size.y
-        // Anchor/Ancora 
+        // The anchor point of the map
         ..anchor = Anchor.topLeft,
     );
   }

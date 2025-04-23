@@ -3,12 +3,12 @@ import 'package:flutter_towerdefense_game/models/map/tile_type.dart';
 /// Modelos pro mapa
 class MapObject
 {
-  /// largura em tiles
+  /// Tile map width
   final int width;
-  /// Altura em tiles
+  /// Tile map height
   final int height;
-  /// Pontos/caminho
-  final List<TileType> points;
+  /// The tiles type
+  final List<List<TileType>> points;
 
   /// Construtor do objeto
   MapObject(

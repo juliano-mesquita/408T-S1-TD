@@ -1,5 +1,9 @@
 import 'package:flame/components.dart';
 
+enum EnemyType {
+  type1, 
+  type2,
+  }
 class EnemyComponent extends SpriteComponent {
   late final int health;
   late final int speed;
@@ -11,18 +15,16 @@ class EnemyComponent extends SpriteComponent {
     required this.way,
   });
 
-  EnemyComponent.build(int type, this.way)
-  {
-    if(type == 1)
-    {
-      this.health = 100;
-      this.speed = 15;
+  EnemyComponent.build(EnemyType type, this.way) {
+    switch (type) {
+      case EnemyType.type1:
+        health = 100;
+        speed = 15;
+        break;
+      case EnemyType.type2:
+        health = 200;
+        speed = 5;
+        break;
     }
-    if(type == 2)
-    {
-      this.health = 200;
-      this.speed = 5;
-    }
-
   }
 }

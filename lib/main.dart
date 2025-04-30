@@ -1,20 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_towerdefense_game/game/market_inventory.dart';
 
-void main() {
-  runApp(const MainApp());
-}
-
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
-    );
-  }
+void main() async {
+  final market = MarketInventory.loadStatic();
+  print('--- Mercado Indígena ---');
+  market.printItems();
 }

@@ -1,0 +1,2 @@
+C:/Users/293815/Documents/408T-S1-TD/android/app/.cxx/Debug/2qa3364w/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/293815/Documents/408T-S1-TD/android/app/.cxx/Debug/2qa3364w/x86_64/CMakeFiles/rebuild_cache.dir

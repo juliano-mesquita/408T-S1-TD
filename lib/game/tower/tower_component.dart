@@ -18,8 +18,19 @@ class TowerComponent extends SpriteComponent {
     required this.damage,
     required this.mapPos,
     required this.attributes,
-  });
+  }) {
+    position =mapPos;
+    anchor = Anchor.center;
+    size = Vector2.all(32);
+    priority = 1;
+  }
 
+  @override
+  Future<void> onLoad() async{
+    sprite = await Sprite.load('');
+    super.onLoad();
+    
+  }
   @override
   String toString()
   {

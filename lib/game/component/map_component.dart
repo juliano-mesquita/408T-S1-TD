@@ -203,7 +203,7 @@ class MapComponent extends PositionComponent {
           );
           add(tower);
           _occupiedTowerPositions.add(position);
-          _showSuccessEffect(position); // <- feedback de sucesso
+          _showSuccessEffect(position); 
         }
       }
       break;

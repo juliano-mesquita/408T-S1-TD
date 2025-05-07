@@ -1,131 +1,14 @@
 
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flame/components.dart' hide Timer;
 import 'package:flame/flame.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_towerdefense_game/game/enemy_component/enemy_component.dart';
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
 import 'package:flutter_towerdefense_game/models/map/tile.dart';
 import 'dart:math' as math;
 
 import 'package:flutter_towerdefense_game/models/map/tile_type.dart';
-
-class EnemyComponent extends PositionComponent
-{
-  final List<List<int>> path;
-  final Vector2 startPos;
-  final List<List<SpriteComponent>> tiles;
-  Vector2 _pos;
-
-  Vector2 _nextPoint(Vector2 pos)
-  {
-    final mapWidth = path[0].length;
-    final mapHeight = path.length;
-    final posX = pos.x.toInt();
-    final posY = pos.y.toInt();
-    
-    // Calculate neighbour tiles according to this reference:
-    //     0       previousY     0
-    // previousX       x       nextX
-    //     0         nextY       0
-    final previousX = (posX - 1);
-    final nextX = (posX + 1);
-    final previousY = (posY - 1);
-    final nextY = (posY + 1);
-
-    // Check whether calculated tiles are inside the map or not 
-    final hasTileInLeft = previousX >= 0 && previousX < mapWidth;
-    final hasTileInRight = nextX >= 0 && nextX < mapWidth;
-    final hasTileInTop = previousY >= 0 && previousY < mapHeight;
-    final hasTileInBottom = nextY >= 0 && nextY < mapHeight;
-
-    // Get each tile
-    // If left tile does exist, then get it.
-    final mapTileLeftType = hasTileInLeft ? path[posY][previousX] : null;
-    // If right tile does exist, then get it.
-    final mapTileRightType = hasTileInRight ? path[posY][nextX] : null;
-    // If top tile does exist, then get it.
-    final mapTileTopType = hasTileInTop ? path[previousY][posX] : null;
-    // If bottom tile does exist, then get it.
-    final mapTileBottomType = hasTileInBottom ? path[nextY][posX] : null;
-    // Greater than 0 means a road type
-    if((mapTileBottomType ?? 0) > 0)
-    {
-      return Vector2(posX.toDouble(), nextY.toDouble());
-    }
-    if((mapTileRightType ?? 0) > 0)
-    {
-      return Vector2(nextX.toDouble(), posY.toDouble());
-    }
-    if((mapTileTopType ?? 0) > 0)
-    {
-      return Vector2(posX.toDouble(), previousY.toDouble());
-    }
-    
-    if((mapTileLeftType ?? 0) > 0)
-    {
-      return Vector2(previousX.toDouble(), posY.toDouble());
-    }
-    throw Exception('Invalid position');
-  }
-  
-
-  EnemyComponent(
-    {
-      required this.path,
-      required this.startPos,
-      required this.tiles
-    }
-  )
-  :
-    _pos = startPos
-  {
-    print(path.map((path) => path.join('\t')).join('\n'));
-  }
-
-  @override
-  void render(Canvas canvas)
-  {
-    canvas.drawRect(size.toRect(), Paint()..color=Colors.red..style=PaintingStyle.fill);
-    super.render(canvas);
-  }
-
-  @override
-  void update(double dt)
-  {
-    var nextPos = _nextPoint(_pos);
-
-    final currentTile = tiles[_pos.y.toInt()][_pos.x.toInt()];
-    final nextTile = tiles[nextPos.y.toInt()][nextPos.x.toInt()];
-
-    var currentTileXDiff = nextTile.center.x - center.x;
-    var currentTileYDiff = nextTile.center.y - center.y;
-    
-    if(currentTileXDiff.abs() < 1 && currentTileYDiff.abs() < 1)
-    {
-      // 0 means we've gonne through it
-      path[_pos.y.toInt()][_pos.x.toInt()] = (path[_pos.y.toInt()][_pos.x.toInt()]/3).floor();
-      _pos = nextPos;
-      nextPos = _nextPoint(_pos);
-
-      print(_pos);
-      print(nextPos);
-      print(path.map((path) => path.join('\t')).join('\n'));
-      print(center);
-      print(tiles[nextPos.y.toInt()][nextPos.x.toInt()].center);
-    }
-    
-    const stepX = 50;
-    const stepY = 50;
-    var xDiff = nextTile.center.x - center.x;
-    var yDiff = nextTile.center.y - center.y;
-
-    position.x += dt*stepX*xDiff.sign;
-    position.y += dt*stepY*yDiff.sign;
-    super.update(dt);
-  }
-}
 
 /// A component that generates a map based on provided tiles
 /// 
@@ -154,8 +37,10 @@ class MapComponent extends PositionComponent
     }
   );
 
+  /// Finds the first top left road in them map
   Vector2 findLeftTopMostRoadTile()
   {
+    //TODO: Optimize to break after finding the first point when looking from top/left to bottom/right
     final tiles = mapObject.points.map((row) => row.indexWhere((tile) => tile == TileType.road));
     int minY = tiles.length;
     int minX = tiles.first;
@@ -190,17 +75,20 @@ class MapComponent extends PositionComponent
     _setMapScaledSize();
     /// Generate map
     await _generateMap();
-    
+    /// Adds an enemy every two seconds
+    //TODO: Use correctly rules to add an enemy
     Timer.periodic(const Duration(seconds: 2), (_) => _addEnemy());
     
     await super.onLoad();
   }
 
+  /// Adds an enemy to the map
   void _addEnemy()
   {
     final firstRoadTilePos = findLeftTopMostRoadTile();
     var firstRoadTile = _tiles[firstRoadTilePos.y.toInt()][firstRoadTilePos.x.toInt()];
     final List<List<int>> enemyPath = [];
+    // Generates the enemy path
     for(int y = 0; y < _tiles.length; y++)
     {
       final List<int> column = [];
@@ -225,10 +113,16 @@ class MapComponent extends PositionComponent
       }
       enemyPath.add(column);
     }
-    final enemy = EnemyComponent(path: enemyPath, startPos: firstRoadTilePos, tiles: _tiles)
-        ..size = Vector2(15, 15)
-        ..anchor = Anchor.topLeft
-        ..position = Vector2(firstRoadTile.topLeftPosition.x - firstRoadTile.width, firstRoadTile.topLeftPosition.y);
+    final enemy = EnemyComponent.build(
+      type: EnemyType.type1,
+      path: enemyPath,
+      startPos: firstRoadTilePos,
+      tiles: _tiles
+    )
+      ..sprite = _tilesToSprite[TileType.grass]
+      ..size = Vector2(15, 15)
+      ..anchor = Anchor.topLeft
+      ..position = Vector2(firstRoadTile.topLeftPosition.x - firstRoadTile.width, firstRoadTile.topLeftPosition.y);
     add(enemy);
     _enemies.add(enemy);
   }

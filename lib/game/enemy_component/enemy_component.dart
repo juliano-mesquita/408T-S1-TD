@@ -1,21 +1,34 @@
 import 'package:flame/components.dart';
 
-enum EnemyType {
-  type1, 
-  type2,
-  }
-class EnemyComponent extends SpriteComponent {
+enum EnemyType { type1, type2 }
+
+class EnemyComponent extends SpriteComponent
+{
   late final int health;
   late final int speed;
-  late final List<Vector2> way;
+
+  late final List<List<int>> path;
+  late final Vector2 startPos;
+  late final List<List<SpriteComponent>> tiles;
+  late Vector2 _pos;
 
   EnemyComponent({
     required this.health,
     required this.speed,
-    required this.way,
+    required this.path,
+    required this.startPos,
+    required this.tiles
   });
 
-  EnemyComponent.build(EnemyType type, this.way) {
+  EnemyComponent.build(
+    {
+      required EnemyType type,
+      required this.path,
+      required this.startPos,
+      required this.tiles
+    }
+  ) {
+    _pos = startPos;
     switch (type) {
       case EnemyType.type1:
         health = 100;
@@ -26,5 +39,93 @@ class EnemyComponent extends SpriteComponent {
         speed = 5;
         break;
     }
+  }
+
+  Vector2 _nextPoint(Vector2 pos)
+  {
+    final mapWidth = path[0].length;
+    final mapHeight = path.length;
+    final posX = pos.x.toInt();
+    final posY = pos.y.toInt();
+    
+    // Calculate neighbour tiles according to this reference:
+    //     0       previousY     0
+    // previousX       x       nextX
+    //     0         nextY       0
+    final previousX = (posX - 1);
+    final nextX = (posX + 1);
+    final previousY = (posY - 1);
+    final nextY = (posY + 1);
+
+    // Check whether calculated tiles are inside the map or not 
+    final hasTileInLeft = previousX >= 0 && previousX < mapWidth;
+    final hasTileInRight = nextX >= 0 && nextX < mapWidth;
+    final hasTileInTop = previousY >= 0 && previousY < mapHeight;
+    final hasTileInBottom = nextY >= 0 && nextY < mapHeight;
+
+    // Get each tile
+    // If left tile does exist, then get it.
+    final mapTileLeftType = hasTileInLeft ? path[posY][previousX] : null;
+    // If right tile does exist, then get it.
+    final mapTileRightType = hasTileInRight ? path[posY][nextX] : null;
+    // If top tile does exist, then get it.
+    final mapTileTopType = hasTileInTop ? path[previousY][posX] : null;
+    // If bottom tile does exist, then get it.
+    final mapTileBottomType = hasTileInBottom ? path[nextY][posX] : null;
+    // Greater than 0 means a road type
+    if((mapTileBottomType ?? 0) > 0)
+    {
+      return Vector2(posX.toDouble(), nextY.toDouble());
+    }
+    if((mapTileRightType ?? 0) > 0)
+    {
+      return Vector2(nextX.toDouble(), posY.toDouble());
+    }
+    if((mapTileTopType ?? 0) > 0)
+    {
+      return Vector2(posX.toDouble(), previousY.toDouble());
+    }
+    
+    if((mapTileLeftType ?? 0) > 0)
+    {
+      return Vector2(previousX.toDouble(), posY.toDouble());
+    }
+    throw Exception('Invalid position');
+  }
+
+  @override
+  void update(double dt)
+  {
+    // TODO: move enemy outside playable map and remove it from component tree
+    var nextPos = _nextPoint(_pos);
+
+    final nextTile = tiles[nextPos.y.toInt()][nextPos.x.toInt()];
+
+    var currentTileXDiff = nextTile.center.x - center.x;
+    var currentTileYDiff = nextTile.center.y - center.y;
+    
+    // If we've reached the tile center we must find the next tile and move
+    // the enemy towards the next tile center
+    if(currentTileXDiff.abs() < 1 && currentTileYDiff.abs() < 1)
+    {
+      // 0 means we've gone through it
+      // Any number above it will be treated as "not interacted"
+      //
+      // Junctions have a number of 3. In other words, they must be "walked on" twice
+      // in order to be counted as fully interacted with/finished
+      path[_pos.y.toInt()][_pos.x.toInt()] = (path[_pos.y.toInt()][_pos.x.toInt()]/3).floor();
+      _pos = nextPos;
+      // Fetch next point
+      nextPos = _nextPoint(_pos);
+    }
+    const stepX = 50;
+    const stepY = 50;
+    var xDiff = nextTile.center.x - center.x;
+    var yDiff = nextTile.center.y - center.y;
+
+    //TODO: Set enemy speed correctly
+    position.x += dt*stepX*xDiff.sign;
+    position.y += dt*stepY*yDiff.sign;
+    super.update(dt);
   }
 }

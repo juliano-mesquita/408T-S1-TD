@@ -2,6 +2,8 @@
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
+import 'package:flutter_towerdefense_game/game/tower/tower_attributes.dart';
+import 'package:flutter_towerdefense_game/game/tower/tower_component.dart';
 import 'package:flutter_towerdefense_game/models/map/tile.dart';
 import 'dart:math' as math;
 
@@ -25,6 +27,10 @@ class MapComponent extends PositionComponent
 
   /// A map that matches tile types to their sprites/images
   late final Map<TileType, Sprite> _tilesToSprite;
+
+  final List<Vector2> _validTowerPositions = [];
+
+   final Set<Vector2> _occupiedTowerPositions = {};
 
   MapComponent(
     {
@@ -73,6 +79,7 @@ class MapComponent extends PositionComponent
     };
   }
 
+
   /// Generates the map based on provided [mapObject] and
   /// scaled viewport sizes
   Future<void> _generateMap() async
@@ -98,6 +105,9 @@ class MapComponent extends PositionComponent
         
         _tiles.add(tile);
         add(tile);
+        if (tileInfo.type == TileType.grass) {
+  _validTowerPositions.add(Vector2(left, top));
+}
       }
     }
   }
@@ -184,7 +194,33 @@ class MapComponent extends PositionComponent
 
     return Tile(
       sprite: sprite,
-      rotationAngle: angle
+      rotationAngle: angle,
+      type: mapTileType
     );
   }
+
+
+void handleTap(Vector2 tapPosition) {
+  for (final position in _validTowerPositions) {
+    if (tapPosition.distanceTo(position) < _tileSize / 2) {
+      if (!_occupiedTowerPositions.contains(position)) {
+        final attributes = TowerAttributes(
+          damageModifier: 1.0,
+          reachModifier: 1.0,
+        );
+        final tower = TowerComponent(
+          mapPos: position,
+          towerType: '',
+          tier: 1,
+          range: 1,
+          damage: 1,
+          attributes: attributes,
+        );
+        add(tower);
+        _occupiedTowerPositions.add(position);
+      }
+      break;
+    }
+  }
+}
 }

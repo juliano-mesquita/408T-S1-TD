@@ -17,7 +17,7 @@ class TowerComponent extends SpriteComponent {
     required this.mapPos,
     required this.attributes,
   }) {
-    position =mapPos;
+    position = mapPos;
     anchor = Anchor.center;
     size = Vector2.all(32);
     priority = 1;
@@ -27,8 +27,8 @@ class TowerComponent extends SpriteComponent {
   Future<void> onLoad() async{
     super.onLoad();
   }
-  @override
 
+  @override
   String toString()
   {
     return 'TowerComponent($towerType, $tier, $range, $damage, $mapPos, $attributes)';

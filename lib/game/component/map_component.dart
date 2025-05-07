@@ -2,10 +2,8 @@ import 'dart:ui' show Paint;
 
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
-import 'package:flame/events.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/flame.dart';
-import 'package:flame/input.dart';
 import 'package:flutter_towerdefense_game/game/component/tile_component.dart';
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_attributes.dart';

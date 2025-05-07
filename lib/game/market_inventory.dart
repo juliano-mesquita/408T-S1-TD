@@ -23,31 +23,34 @@ class MarketInventory {
   }
 
   static MarketInventory loadStatic() {
-    return MarketInventory(items: [
-      MarketItem(
+    return MarketInventory(
+      items: [
+        MarketItem(
           id: 'tower1',
           name: 'Torre Arqueira Indígena',
           description: 'Atira flechas nos inimigos com alta precisão.',
           price: 100,
           type: MarketItemType.tower,
-          icon: 'assets/images/floor/tower_arrow.png'),
-      MarketItem(
-        id: 'upgrade1',
-        name: 'Flechas de Pedra',
-        description: 'Aumenta o dano das torres em 20%.',
-        price: 75,
-        type: MarketItemType.upgrade,
-        icon: 'assets/images/floor/upgrade_arrow.png',
-      ),
-      MarketItem(
-        id: 'resource1',
-        name: 'Bênção da Floresta',
-        description: 'Recupera a vida das torres lentamente.',
-        price: 50,
-        type: MarketItemType.resource,
-        icon: 'assets/images/floor/forest_blessing.png',
-      ),
-    ]);
+          icon: 'assets/images/floor/tower_arrow.png',
+        ),
+        MarketItem(
+          id: 'upgrade1',
+          name: 'Flechas de Pedra',
+          description: 'Aumenta o dano das torres em 20%.',
+          price: 75,
+          type: MarketItemType.upgrade,
+          icon: 'assets/images/floor/upgrade_arrow.png',
+        ),
+        MarketItem(
+          id: 'resource1',
+          name: 'Bênção da Floresta',
+          description: 'Recupera a vida das torres lentamente.',
+          price: 50,
+          type: MarketItemType.resource,
+          icon: 'assets/images/floor/forest_blessing.png',
+        ),
+      ],
+    );
   }
 
   void printItems() {

@@ -1,7 +1,7 @@
 import 'dart:ui' show Paint;
 
 import 'package:flame/components.dart';
-import 'package:flame/effects.dart' show EffectController, ScaleEffect;
+import 'package:flame/effects.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/palette.dart' show Color;
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
@@ -203,10 +203,12 @@ class MapComponent extends PositionComponent {
           );
           add(tower);
           _occupiedTowerPositions.add(position);
-          _showSuccessEffect(position); 
+          _showSuccessEffect(position);
+        } else {
+          _showErrorEffect(position);
         }
+        break;
       }
-      break;
     }
   }
 
@@ -226,7 +228,24 @@ class MapComponent extends PositionComponent {
         EffectController(duration: 0.2, reverseDuration: 0.2, repeatCount: 1),
       ),
     );
-     Future.delayed(
+    Future.delayed(
+      Duration(milliseconds: 500),
+      () => effect.removeFromParent(),
+    );
+  }
+
+  Future<void> _showErrorEffect(Vector2 position) async {
+    final effect = CircleComponent(
+      radius: 20,
+      position: position,
+      paint: Paint()..color = const Color(0x77FF0000),
+      anchor: Anchor.center,
+      priority: 2,
+    );
+
+    add(effect);
+    await effect.add(OpacityEffect.to(0, EffectController(duration: 0.3)));
+    Future.delayed(
       Duration(milliseconds: 500),
       () => effect.removeFromParent(),
     );

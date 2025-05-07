@@ -1,8 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_attributes.dart';
 
-
-
 class TowerComponent extends SpriteComponent {
   final String towerType;
   final int tier;
@@ -19,21 +17,20 @@ class TowerComponent extends SpriteComponent {
     required this.mapPos,
     required this.attributes,
   }) {
-    position =mapPos;
+    position = mapPos;
     anchor = Anchor.center;
     size = Vector2.all(32);
     priority = 1;
   }
 
   @override
-  Future<void> onLoad() async{
+  Future<void> onLoad() async {
     sprite = await Sprite.load('');
     super.onLoad();
-    
   }
+
   @override
-  String toString()
-  {
+  String toString() {
     return 'TowerComponent($towerType, $tier, $range, $damage, $mapPos, $attributes)';
   }
 }

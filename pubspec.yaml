@@ -21,3 +21,5 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/floor/
+    - assets/images/indios_garimpeiros/
+    - assets/images/

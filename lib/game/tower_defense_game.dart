@@ -1,12 +1,11 @@
 
 import 'package:flame/components.dart';
-import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter_towerdefense_game/game/component/map_component.dart';
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
 import 'package:flutter_towerdefense_game/models/map/tile_type.dart';
 
-class TowerDefenseGame extends FlameGame with TapDetector
+class TowerDefenseGame extends FlameGame
 {
   // Instanciando o mapa
   late final MapComponent mapComponent;
@@ -45,12 +44,5 @@ class TowerDefenseGame extends FlameGame with TapDetector
         // The anchor point of the map
         ..anchor = Anchor.topLeft,
     );
-  }
-
-
-  @override
-  void onTapDown(TapDownInfo info) {
-    final touchPosition = info.eventPosition.global;
-    mapComponent.handleTap(touchPosition);
   }
 }

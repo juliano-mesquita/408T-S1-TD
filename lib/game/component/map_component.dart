@@ -1,6 +1,9 @@
 
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
+import 'package:flame/extensions.dart';
 import 'package:flame/flame.dart';
+import 'package:flame/input.dart';
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_attributes.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_component.dart';
@@ -8,6 +11,28 @@ import 'package:flutter_towerdefense_game/models/map/tile.dart';
 import 'dart:math' as math;
 
 import 'package:flutter_towerdefense_game/models/map/tile_type.dart';
+
+class TileComponent extends SpriteComponent with TapCallbacks
+{
+  final int xMap;
+  final int yMap;
+  final void Function() onTapDownCallback;
+
+  TileComponent(
+    {
+      required this.xMap,
+      required this.yMap,
+      required this.onTapDownCallback
+    }
+  );
+
+  @override
+  void onTapDown(TapDownEvent event)
+  {
+    print('Tapped tile at: $xMap $yMap');
+    onTapDownCallback();
+  }
+}
 
 /// A component that generates a map based on provided tiles
 /// 
@@ -30,7 +55,9 @@ class MapComponent extends PositionComponent
 
   final List<Vector2> _validTowerPositions = [];
 
-   final Set<Vector2> _occupiedTowerPositions = {};
+  final Set<Vector2> _occupiedTowerPositions = {};
+
+  late final Sprite towerSprite; 
 
   MapComponent(
     {
@@ -43,6 +70,9 @@ class MapComponent extends PositionComponent
   {
     /// Intiliaze sprite images and variables
     await _initializeSprites();
+
+    towerSprite = Sprite(await Flame.images.load('oca_tower.png'));
+
     /// Set map scaled size
     _setMapScaledSize();
     /// Generate map
@@ -95,19 +125,25 @@ class MapComponent extends PositionComponent
 
         final rotationAngle = tileInfo.rotationAngle*(math.pi/180);
 
-        final tile = SpriteComponent(
-          anchor: Anchor.center,
-          size: Vector2(_tileSize, _tileSize),
-          position: Vector2(left, top),
-          angle: rotationAngle
-        );
+        final tile = TileComponent(
+          xMap: tileIndexX,
+          yMap: tileIndexY,
+          onTapDownCallback: ()
+          {
+            handleTap(x: tileIndexX, y: tileIndexY);
+          }
+        )
+          ..anchor=Anchor.center
+          ..size=Vector2(_tileSize, _tileSize)
+          ..position=Vector2(left, top)
+          ..angle=rotationAngle;
         tile.sprite = tileInfo.sprite;
         
         _tiles.add(tile);
         add(tile);
         if (tileInfo.type == TileType.grass) {
-  _validTowerPositions.add(Vector2(left, top));
-}
+          _validTowerPositions.add(Vector2(tileIndexX.toDouble(), tileIndexY.toDouble()));
+        }
       }
     }
   }
@@ -200,27 +236,40 @@ class MapComponent extends PositionComponent
   }
 
 
-void handleTap(Vector2 tapPosition) {
-  for (final position in _validTowerPositions) {
-    if (tapPosition.distanceTo(position) < _tileSize / 2) {
-      if (!_occupiedTowerPositions.contains(position)) {
-        final attributes = TowerAttributes(
-          damageModifier: 1.0,
-          reachModifier: 1.0,
-        );
-        final tower = TowerComponent(
-          mapPos: position,
-          towerType: '',
-          tier: 1,
-          range: 1,
-          damage: 1,
-          attributes: attributes,
-        );
-        add(tower);
-        _occupiedTowerPositions.add(position);
-      }
-      break;
+  void handleTap({required int x, required int y}) {
+    final isValidPosition = _validTowerPositions.any((pos) => pos.x == x && pos.y == y);
+    final towerPosition = Vector2(x.toDouble(), y.toDouble());
+
+    if(!isValidPosition)
+    {
+      print('Invalid tower position');
+      return;
     }
+    if (_occupiedTowerPositions.contains(towerPosition))
+    {
+      print('Tower position already ocuppied');
+      return;
+    }
+    final attributes = TowerAttributes(
+      damageModifier: 1.0,
+      reachModifier: 1.0,
+    );
+    final left = (x*_tileSize)+(_tileSize/2);
+    final top = (y*_tileSize)+(_tileSize/2);
+
+    final tower = TowerComponent(
+      mapPos: towerPosition,
+      towerType: '',
+      tier: 1,
+      range: 1,
+      damage: 1,
+      attributes: attributes,
+    )
+      ..anchor=Anchor.center
+      ..position=Vector2(left, top)
+      ..sprite = towerSprite
+      ..size = Vector2.all(_tileSize);
+    add(tower);
+    _occupiedTowerPositions.add(towerPosition);
   }
-}
 }

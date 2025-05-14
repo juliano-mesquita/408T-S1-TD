@@ -4,6 +4,7 @@ import 'package:flame/events.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/input.dart';
+import 'package:flutter_towerdefense_game/game/component/tile_component.dart';
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_attributes.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_component.dart';
@@ -11,28 +12,6 @@ import 'package:flutter_towerdefense_game/models/map/tile.dart';
 import 'dart:math' as math;
 
 import 'package:flutter_towerdefense_game/models/map/tile_type.dart';
-
-class TileComponent extends SpriteComponent with TapCallbacks
-{
-  final int xMap;
-  final int yMap;
-  final void Function() onTapDownCallback;
-
-  TileComponent(
-    {
-      required this.xMap,
-      required this.yMap,
-      required this.onTapDownCallback
-    }
-  );
-
-  @override
-  void onTapDown(TapDownEvent event)
-  {
-    print('Tapped tile at: $xMap $yMap');
-    onTapDownCallback();
-  }
-}
 
 /// A component that generates a map based on provided tiles
 /// 
@@ -128,10 +107,7 @@ class MapComponent extends PositionComponent
         final tile = TileComponent(
           xMap: tileIndexX,
           yMap: tileIndexY,
-          onTapDownCallback: ()
-          {
-            handleTap(x: tileIndexX, y: tileIndexY);
-          }
+          onTapDownCallback: handleTap
         )
           ..anchor=Anchor.center
           ..size=Vector2(_tileSize, _tileSize)
@@ -236,7 +212,8 @@ class MapComponent extends PositionComponent
   }
 
 
-  void handleTap({required int x, required int y}) {
+  void handleTap(int x, int y)
+  {
     final isValidPosition = _validTowerPositions.any((pos) => pos.x == x && pos.y == y);
     final towerPosition = Vector2(x.toDouble(), y.toDouble());
 

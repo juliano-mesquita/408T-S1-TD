@@ -20,4 +20,7 @@ class PlayerWallet {
   :
     assert(balance >= 0, 'Initial Balance Must Not Be Negative'),
     _balance = balance;
+
+  /// Checks [balance] has more coins than [price]
+  bool enoughCoins(int price) => balance >= price;
 }

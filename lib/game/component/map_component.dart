@@ -1,7 +1,13 @@
 
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
+import 'package:flame/extensions.dart';
 import 'package:flame/flame.dart';
+import 'package:flame/input.dart';
+import 'package:flutter_towerdefense_game/game/component/tile_component.dart';
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
+import 'package:flutter_towerdefense_game/game/tower/tower_attributes.dart';
+import 'package:flutter_towerdefense_game/game/tower/tower_component.dart';
 import 'package:flutter_towerdefense_game/models/map/tile.dart';
 import 'dart:math' as math;
 
@@ -26,6 +32,12 @@ class MapComponent extends PositionComponent
   /// A map that matches tile types to their sprites/images
   late final Map<TileType, Sprite> _tilesToSprite;
 
+  final List<Vector2> _validTowerPositions = [];
+
+  final Set<Vector2> _occupiedTowerPositions = {};
+
+  late final Sprite towerSprite; 
+
   MapComponent(
     {
       required this.mapObject
@@ -37,6 +49,9 @@ class MapComponent extends PositionComponent
   {
     /// Intiliaze sprite images and variables
     await _initializeSprites();
+
+    towerSprite = Sprite(await Flame.images.load('oca_tower.png'));
+
     /// Set map scaled size
     _setMapScaledSize();
     /// Generate map
@@ -73,6 +88,7 @@ class MapComponent extends PositionComponent
     };
   }
 
+
   /// Generates the map based on provided [mapObject] and
   /// scaled viewport sizes
   Future<void> _generateMap() async
@@ -88,16 +104,22 @@ class MapComponent extends PositionComponent
 
         final rotationAngle = tileInfo.rotationAngle*(math.pi/180);
 
-        final tile = SpriteComponent(
-          anchor: Anchor.center,
-          size: Vector2(_tileSize, _tileSize),
-          position: Vector2(left, top),
-          angle: rotationAngle
-        );
+        final tile = TileComponent(
+          xMap: tileIndexX,
+          yMap: tileIndexY,
+          onTapDownCallback: handleTap
+        )
+          ..anchor=Anchor.center
+          ..size=Vector2(_tileSize, _tileSize)
+          ..position=Vector2(left, top)
+          ..angle=rotationAngle;
         tile.sprite = tileInfo.sprite;
         
         _tiles.add(tile);
         add(tile);
+        if (tileInfo.type == TileType.grass) {
+          _validTowerPositions.add(Vector2(tileIndexX.toDouble(), tileIndexY.toDouble()));
+        }
       }
     }
   }
@@ -184,7 +206,47 @@ class MapComponent extends PositionComponent
 
     return Tile(
       sprite: sprite,
-      rotationAngle: angle
+      rotationAngle: angle,
+      type: mapTileType
     );
+  }
+
+
+  void handleTap(int x, int y)
+  {
+    final isValidPosition = _validTowerPositions.any((pos) => pos.x == x && pos.y == y);
+    final towerPosition = Vector2(x.toDouble(), y.toDouble());
+
+    if(!isValidPosition)
+    {
+      print('Invalid tower position');
+      return;
+    }
+    if (_occupiedTowerPositions.contains(towerPosition))
+    {
+      print('Tower position already ocuppied');
+      return;
+    }
+    final attributes = TowerAttributes(
+      damageModifier: 1.0,
+      reachModifier: 1.0,
+    );
+    final left = (x*_tileSize)+(_tileSize/2);
+    final top = (y*_tileSize)+(_tileSize/2);
+
+    final tower = TowerComponent(
+      mapPos: towerPosition,
+      towerType: '',
+      tier: 1,
+      range: 1,
+      damage: 1,
+      attributes: attributes,
+    )
+      ..anchor=Anchor.center
+      ..position=Vector2(left, top)
+      ..sprite = towerSprite
+      ..size = Vector2.all(_tileSize);
+    add(tower);
+    _occupiedTowerPositions.add(towerPosition);
   }
 }

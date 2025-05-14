@@ -8,6 +8,7 @@ import 'package:flutter_towerdefense_game/models/map/tile_type.dart';
 class TowerDefenseGame extends FlameGame
 {
   // Instanciando o mapa
+  late final MapComponent mapComponent;
   static final _map = MapObject(
     // largura
     width: 11,

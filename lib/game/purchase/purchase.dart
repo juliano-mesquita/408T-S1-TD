@@ -3,24 +3,25 @@ class PlayerWallet {
 
   PlayerWallet({required this.balance});
 
-  bool EnoughCoins(int price) => balance >= price;
+  bool enoughCoins(int price) => balance >= price;
+  
   void spendCoins(int price) {
-    if (EnoughCoins(price)) {
+    if (enoughCoins(price)) {
       balance -= price;
     }
   }
 }
 
 class Invetory {
-  List<String> towers = [];
-  void addTower(String tower) {
-    towers.add(tower);
+  List<String> items = [];
+  void addItems(String item) {
+    items.add(item);
   }
 }
 
-void buyTower(PlayerWallet wallet, Invetory invetory, String tower, int price) {
-  if (wallet.EnoughCoins(price)) {
+void buyTower(PlayerWallet wallet, Invetory invetory, String item, int price) {
+  if (wallet.enoughCoins(price)) {
     wallet.spendCoins(price);
-    invetory.addTower(tower);
+    invetory.addItems(item);
   } else {}
 }

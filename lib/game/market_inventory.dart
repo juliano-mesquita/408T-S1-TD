@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter_towerdefense_game/game/market_item.dart';
 
 class MarketInventory {
@@ -55,7 +56,7 @@ class MarketInventory {
 
   void printItems() {
     for (var item in items) {
-      print(item);
+      debugPrint(item.toString());
     }
   }
 }

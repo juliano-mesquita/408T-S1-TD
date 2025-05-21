@@ -39,20 +39,24 @@ jobs:
       # Step 4: Install Flutter dependencies
       - name: Install Flutter dependencies
         run: flutter pub get
+      # Step 5: Find app files and add to coverage report
+      - name: Run Coverage Helper
+        run: ./coverage.sh flutter_towerdefense_game
 
-      # Step 5: Run tests with coverage
+      # Step 6: Run tests with coverage
       - name: Run Flutter tests
         run: flutter test --coverage
 
-      # Step 6: Upload coverage as artifact
+      # Step 7: Upload coverage as artifact
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage
           path: coverage/
-
+      # Step 8: Setup LCOV Reporter
       - name: Setup LCOV
         uses: hrishikesh-kadam/setup-lcov@v1
+      # Step 9: Report Code coverage
       - name: Report code coverage
         uses: zgosalvez/github-actions-report-lcov@v4
         with:

@@ -41,7 +41,7 @@ jobs:
         run: flutter pub get
       # Step 5: Find app files and add to coverage report
       - name: Run Coverage Helper
-        run: ./coverage.sh flutter_towerdefense_game
+        run: bash ./coverage.sh flutter_towerdefense_game
 
       # Step 6: Run tests with coverage
       - name: Run Flutter tests

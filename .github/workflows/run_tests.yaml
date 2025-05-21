@@ -10,7 +10,8 @@ jobs:
   flutter-tests:
     name: Run Flutter Tests
     runs-on: ubuntu-latest
-
+    permissions:
+      pull-requests: write
     env:
       FLUTTER_CHANNEL: master
       FLUTTER_VERSION: 3.32.0
@@ -50,21 +51,13 @@ jobs:
           name: coverage
           path: coverage/
 
-      # Step 7: Parse and Display Coverage (Optional)
-      - name: Display test coverage
-        run: |
-          if grep -q 'All files.*:.*[0-9]\+\.[0-9]\+%' coverage/lcov.info; then
-            grep 'All files.*:.*[0-9]\+\.[0-9]\+%' coverage/lcov.info
-          else
-            echo "No coverage summary found."
-          fi
       - name: Setup LCOV
         uses: hrishikesh-kadam/setup-lcov@v1
       - name: Report code coverage
         uses: zgosalvez/github-actions-report-lcov@v4
         with:
-          coverage-files: lcov.info
+          coverage-files: coverage/lcov.info
           minimum-coverage: 90
-          artifact-name: coverage
+          artifact-name: coverage-html
           github-token: ${{ secrets.GITHUB_TOKEN }}
           update-comment: true

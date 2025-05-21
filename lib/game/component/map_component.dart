@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/flame.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_towerdefense_game/game/component/tile_component.dart';
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_attributes.dart';
@@ -208,13 +209,13 @@ class MapComponent extends PositionComponent {
 
     if(!isValidPosition)
     {
-      print('Invalid tower position');
+      debugPrint('Invalid tower position');
       _showErrorEffect(towerGlobalPosition);
       return;
     }
     if (_occupiedTowerPositions.contains(towerPosition))
     {
-      print('Tower position already ocuppied');
+      debugPrint('Tower position already ocuppied');
       _showErrorEffect(towerGlobalPosition);
       return;
     }
@@ -257,7 +258,7 @@ class MapComponent extends PositionComponent {
       ),
     );
     Future.delayed(
-      Duration(milliseconds: 500),
+      const Duration(milliseconds: 500),
       () => effect.removeFromParent(),
     );
   }
@@ -274,7 +275,7 @@ class MapComponent extends PositionComponent {
     add(effect);
     await effect.add(OpacityEffect.to(0, EffectController(duration: 0.3)));
     Future.delayed(
-      Duration(milliseconds: 500),
+      const Duration(milliseconds: 500),
       () => effect.removeFromParent(),
     );
   }

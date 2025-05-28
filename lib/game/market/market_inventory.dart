@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_towerdefense_game/game/market/market_item.dart';
 
 class MarketInventory {

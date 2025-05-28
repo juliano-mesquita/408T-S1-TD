@@ -12,6 +12,8 @@ class PlayerInventory
     }
   );
 
+  get items => null;
+
   bool addItem(PlayerInventoryItem item)
   {
     if(_inventory.length >= inventorySize)

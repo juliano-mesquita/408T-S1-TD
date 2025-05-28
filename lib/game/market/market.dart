@@ -43,6 +43,9 @@ class Market
           )
         );
       break;
+      case MarketItemType.item:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 

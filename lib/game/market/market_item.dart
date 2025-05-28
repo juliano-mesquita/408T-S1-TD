@@ -1,4 +1,4 @@
-enum MarketItemType { tower, upgrade, resource }
+enum MarketItemType { tower, upgrade, resource, item }
 
 class MarketItem {
   final String id;

@@ -5,7 +5,7 @@ import 'package:flutter_towerdefense_game/game/tower_defense_game.dart';
 
 void main() {
   final market = MarketInventory.loadStatic();
-  print('--- Mercado Indígena ---');
+  debugPrint('--- Mercado Indígena ---');
   market.printItems();
   final game = TowerDefenseGame();
   runApp(GameWidget(game: game));

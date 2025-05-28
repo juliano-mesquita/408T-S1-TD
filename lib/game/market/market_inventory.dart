@@ -55,7 +55,7 @@ class MarketInventory {
 
   void printItems() {
     for (var item in items) {
-      print(item);
+      debugPrint(item.toString());
     }
   }
 }

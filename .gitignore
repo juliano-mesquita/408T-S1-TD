@@ -42,3 +42,4 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 android/app/.cxx
+test/coverage_helper_test.dart

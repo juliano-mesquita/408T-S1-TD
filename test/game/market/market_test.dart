@@ -4,7 +4,6 @@ import 'package:flutter_towerdefense_game/game/market/market_item.dart';
 import 'package:flutter_towerdefense_game/game/market/market_inventory.dart';
 import 'package:flutter_towerdefense_game/game/player/player_wallet.dart';
 import 'package:flutter_towerdefense_game/game/player/inventory/player_inventory.dart';
-import 'package:flutter_towerdefense_game/game/player/inventory/player_inventory_item.dart';
 
 void main() {
   group('Market.buyItem()', () {

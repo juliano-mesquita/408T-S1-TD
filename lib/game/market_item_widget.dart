@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class MarketItem {
+class MarketItems {
   final String name;
   final String description;
   final int price;
   final String iconPath;
 
-  MarketItem({
+  MarketItems({
     required this.name,
     required this.description,
     required this.price,
@@ -15,7 +15,7 @@ class MarketItem {
 }
 
 class MarketItemWidget extends StatelessWidget {
-  final MarketItem item;
+  final MarketItems item;
   final int playerGold = 100;
 
   const MarketItemWidget({super.key, required this.item});

@@ -15,7 +15,8 @@ void main() {
     GameWidget(
       game: game,
       overlayBuilderMap: {
-        'Market': (_, __) => MarketComponent(items: market.items),
+        'Market':
+            (context, towerdefensegame) => MarketComponent(items: market.items),
       },
       initialActiveOverlays: const ['Market'],
     ),

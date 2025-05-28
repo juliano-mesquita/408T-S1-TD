@@ -2,7 +2,7 @@ import 'market_item_widget.dart';
 import 'package:flutter/material.dart';
 
 class MarketComponent extends StatelessWidget {
-  final List<MarketItem> items;
+  final List<MarketItems> items;
 
   const MarketComponent({super.key, required this.items});
 

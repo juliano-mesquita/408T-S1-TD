@@ -41,6 +41,7 @@ class MapComponent extends PositionComponent {
   final Set<Vector2> _occupiedTowerPositions = {};
 
   late final Sprite towerSprite; 
+  late final Sprite enemySprite;
 
   MapComponent(
     {
@@ -83,6 +84,7 @@ class MapComponent extends PositionComponent {
     await _initializeSprites();
 
     towerSprite = Sprite(await Flame.images.load('indios_garimpeiros/indio_um.png'));
+    enemySprite = Sprite(await Flame.images.load('indios_garimpeiros/garimpeira.png'));
 
     /// Set map scaled size
     _setMapScaledSize();
@@ -135,8 +137,8 @@ class MapComponent extends PositionComponent {
       startPos: firstRoadTilePos,
       tiles: _tiles
     )
-      ..sprite = _tilesToSprite[TileType.grass]
-      ..size = Vector2(15, 15)
+      ..sprite = enemySprite
+      ..size = Vector2(35, 35)
       ..anchor = Anchor.topLeft
       ..position = Vector2(firstRoadTile.topLeftPosition.x - firstRoadTile.width, firstRoadTile.topLeftPosition.y);
     add(enemy);

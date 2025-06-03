@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flutter_towerdefense_game/game/component/health_bar_component.dart';
 
 enum EnemyType { type1, type2 }
 
@@ -20,6 +21,7 @@ class EnemyComponent extends SpriteComponent
     required this.tiles
   });
 
+
   EnemyComponent.build(
     {
       required EnemyType type,
@@ -27,7 +29,9 @@ class EnemyComponent extends SpriteComponent
       required this.startPos,
       required this.tiles
     }
-  ) {
+  )
+   {
+    late HealthBarComponent healthBar;
     _pos = startPos;
     switch (type) {
       case EnemyType.type1:
@@ -39,6 +43,13 @@ class EnemyComponent extends SpriteComponent
         speed = 5;
         break;
     }
+    healthBar = HealthBarComponent(
+  maxHealth: health.toDouble(),
+  currentHealth: health.toDouble(),
+)
+  ..position = Vector2(9, -8); // position above sprite
+
+add(healthBar); // add as children
   }
 
   Vector2 _nextPoint(Vector2 pos)
@@ -128,4 +139,7 @@ class EnemyComponent extends SpriteComponent
     position.y += dt*stepY*yDiff.sign;
     super.update(dt);
   }
+
+
 }
+

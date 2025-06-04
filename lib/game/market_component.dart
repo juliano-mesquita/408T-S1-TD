@@ -1,3 +1,5 @@
+import 'package:flutter_towerdefense_game/game/market/market_item.dart';
+
 import 'market_item_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +13,7 @@ class MarketComponent extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        height: 150,
+        height: 225,
         padding: const EdgeInsets.all(8),
         color: Colors.black.withOpacity(0.7),
         child: ListView.builder(

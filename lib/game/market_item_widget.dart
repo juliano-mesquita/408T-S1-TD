@@ -1,18 +1,5 @@
 import 'package:flutter/material.dart';
-
-class MarketItem {
-  final String name;
-  final String description;
-  final int price;
-  final String iconPath;
-
-  MarketItem({
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.iconPath,
-  });
-}
+import 'package:flutter_towerdefense_game/game/market/market_item.dart';
 
 class MarketItemWidget extends StatelessWidget {
   final MarketItem item;
@@ -33,11 +20,12 @@ class MarketItemWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(item.iconPath, width: 40, height: 40),
+            Image.asset(item.icon, width: 40, height: 40),
             const SizedBox(height: 4),
             Text(
               item.name,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+              maxLines: 1,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0),

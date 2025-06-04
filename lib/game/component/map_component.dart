@@ -43,6 +43,10 @@ class MapComponent extends PositionComponent {
   late final Sprite towerSprite; 
   late final Sprite enemySprite;
 
+  int _enemyCount = 0;
+final int _maxEnemies = 10;
+Timer? _enemySpawnTimer;
+
   MapComponent(
     {
       required this.mapObject
@@ -93,16 +97,22 @@ class MapComponent extends PositionComponent {
     await _generateMap();
     /// Adds an enemy every two seconds
     //TODO: Use correctly rules to add an enemy
-    // Timer.periodic(const Duration(seconds: 2), (_) => _addEnemy());
+     _enemySpawnTimer = Timer.periodic(const Duration(seconds: 2), (_) {
+    if(_enemyCount < _maxEnemies){
+    _addEnemy();
+    } else{
+      _enemySpawnTimer?.cancel();
+    }
+     });
     
     await super.onLoad();
-    _addEnemy();
   }
   
 
   /// Adds an enemy to the map
   void _addEnemy()
   {
+    if(_enemyCount>=_maxEnemies) return;
     final firstRoadTilePos = findLeftTopMostRoadTile();
     var firstRoadTile = _tiles[firstRoadTilePos.y.toInt()][firstRoadTilePos.x.toInt()];
     final List<List<int>> enemyPath = [];
@@ -143,6 +153,7 @@ class MapComponent extends PositionComponent {
       ..position = Vector2(firstRoadTile.topLeftPosition.x - firstRoadTile.width, firstRoadTile.topLeftPosition.y);
     add(enemy);
     _enemies.add(enemy);
+    _enemyCount ++;
   }
 
   /// Calculates and scale map tile sizes

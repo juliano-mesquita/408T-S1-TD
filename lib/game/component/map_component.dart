@@ -104,7 +104,8 @@ class MapComponent extends PositionComponent {
         final tile = TileComponent(
           xMap: tileIndexX,
           yMap: tileIndexY,
-          onTapDownCallback: handleTap
+          onTapDownCallback: handleTap,
+          tileType: tileInfo.type
         )
           ..anchor=Anchor.center
           ..size=Vector2(_tileSize, _tileSize)
@@ -162,6 +163,7 @@ class MapComponent extends PositionComponent {
 
     // Load the sprite for the current tile
     Sprite sprite = _tilesToSprite[mapTileType]!;
+    TileType tileType = mapTileType;
 
     if (isCurrentTileRoad) {
       // If current is road, then check if we need to change the sprite or just rotate it.
@@ -171,29 +173,34 @@ class MapComponent extends PositionComponent {
           isBottomTileRoad) {
         // When we are surrounded by roads it means we are on a junction
         sprite = _tilesToSprite[TileType.roadJunction]!;
+        tileType = TileType.roadJunction;
       } else if (isLeftTileRoad && isTopTileRoad) {
         // If left tile is road, and top also is, then we are in a turn
         sprite = _tilesToSprite[TileType.roadTurn]!;
         angle = 180;
+        tileType = TileType.roadTurn;
       } else if (isLeftTileRoad && isBottomTileRoad) {
         // If left tile is road, and bottom also is, then we are in a turn
         sprite = _tilesToSprite[TileType.roadTurn]!;
         angle = 90;
+        tileType = TileType.roadTurn;
       } else if (isRightTileRoad && isTopTileRoad) {
         // If right tile is road, and top also is, then we are in a turn
         sprite = _tilesToSprite[TileType.roadTurn]!;
         angle = 270;
+        tileType = TileType.roadTurn;
       } else if (isRightTileRoad && isBottomTileRoad) {
         // If right tile is road, and bottom also is, then we are in a turn
         sprite = _tilesToSprite[TileType.roadTurn]!;
         angle = 0;
+        tileType = TileType.roadTurn;
       } else if (isRightTileRoad || isLeftTileRoad) {
         // If left or right tile are roads, then we rotate the image 90 degrees
         angle = 90;
       }
     }
 
-    return Tile(sprite: sprite, rotationAngle: angle, type: mapTileType);
+    return Tile(sprite: sprite, rotationAngle: angle, type: tileType);
   }
 
   void handleTap(int x, int y)

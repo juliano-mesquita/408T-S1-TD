@@ -1,0 +1,324 @@
+[
+    [
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "roadTurn"
+        },
+        {
+            "angle": 1.5707963267948966,
+            "type": "road"
+        },
+        {
+            "angle": 1.5707963267948966,
+            "type": "road"
+        },
+        {
+            "angle": 1.5707963267948966,
+            "type": "roadTurn"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        }
+    ],
+    [
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "road"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "road"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "roadTurn"
+        },
+        {
+            "angle": 1.5707963267948966,
+            "type": "road"
+        },
+        {
+            "angle": 1.5707963267948966,
+            "type": "roadTurn"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        }
+    ],
+    [
+        {
+            "angle": 1.5707963267948966,
+            "type": "road"
+        },
+        {
+            "angle": 1.5707963267948966,
+            "type": "road"
+        },
+        {
+            "angle": 3.141592653589793,
+            "type": "roadTurn"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "road"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "road"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "road"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        }
+    ],
+    [
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "roadTurn"
+        },
+        {
+            "angle": 1.5707963267948966,
+            "type": "road"
+        },
+        {
+            "angle": 0.0,
+            "type": "roadJunction"
+        },
+        {
+            "angle": 1.5707963267948966,
+            "type": "road"
+        },
+        {
+            "angle": 3.141592653589793,
+            "type": "roadTurn"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 4.71238898038469,
+            "type": "roadTurn"
+        },
+        {
+            "angle": 1.5707963267948966,
+            "type": "road"
+        }
+    ],
+    [
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "road"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "road"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        }
+    ],
+    [
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 4.71238898038469,
+            "type": "roadTurn"
+        },
+        {
+            "angle": 1.5707963267948966,
+            "type": "road"
+        },
+        {
+            "angle": 3.141592653589793,
+            "type": "roadTurn"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        }
+    ],
+    [
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        },
+        {
+            "angle": 0.0,
+            "type": "grass"
+        }
+    ]
+]

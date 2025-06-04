@@ -2,7 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flutter_towerdefense_game/game/component/health_bar_component.dart';
 
 enum EnemyType { type1, type2 }
-
+//TODO: add different sprites for different enemy types
 class EnemyComponent extends SpriteComponent
 {
   late final int health;

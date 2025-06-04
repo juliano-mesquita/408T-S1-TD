@@ -108,7 +108,7 @@ Timer? _enemySpawnTimer;
     await super.onLoad();
   }
   
-
+  
   /// Adds an enemy to the map
   void _addEnemy()
   {

@@ -1,5 +1,6 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_towerdefense_game/game/market_component.dart';
 import 'package:flutter_towerdefense_game/game/market/market_inventory.dart';
 import 'package:flutter_towerdefense_game/controller/player_controller.dart';
 import 'package:flutter_towerdefense_game/game/tower_defense_game.dart';
@@ -19,9 +20,10 @@ void main() async
   runApp(
     GameWidget(
       game: game,
-      initialActiveOverlays: const ['player'],
+      initialActiveOverlays: const ['player', 'Market'],
       overlayBuilderMap:
       {
+        'Market': (context, towerdefensegame) => MarketComponent(item: market.items),
         'player': (context, _)
         {
           return const PlayerHudWidget();

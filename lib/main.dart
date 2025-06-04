@@ -16,7 +16,7 @@ void main() {
       game: game,
       overlayBuilderMap: {
         'Market':
-            (context, towerdefensegame) => MarketComponent(items: market.items),
+            (context, towerdefensegame) => MarketComponent(item: market.items),
       },
       initialActiveOverlays: const ['Market'],
     ),

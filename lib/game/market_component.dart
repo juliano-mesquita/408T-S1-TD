@@ -2,9 +2,9 @@ import 'market_item_widget.dart';
 import 'package:flutter/material.dart';
 
 class MarketComponent extends StatelessWidget {
-  final List<MarketItems> items;
+  final List<MarketItem> item;
 
-  const MarketComponent({super.key, required this.items});
+  const MarketComponent({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +16,9 @@ class MarketComponent extends StatelessWidget {
         color: Colors.black.withOpacity(0.7),
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: items.length,
+          itemCount: item.length,
           itemBuilder: (context, index) {
-            return MarketItemWidget(item: items[index]);
+            return MarketItemWidget(item: item[index]);
           },
         ),
       ),

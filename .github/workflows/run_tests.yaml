@@ -1,0 +1,67 @@
+name: Flutter Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  flutter-tests:
+    name: Run Flutter Tests
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    env:
+      FLUTTER_CHANNEL: master
+      FLUTTER_VERSION: 3.32.0
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Install dependencies (apt packages)
+      - name: Install required libraries
+        run: sudo apt-get update -q -y && sudo apt-get install -y lib32stdc++6
+
+      # Step 3: Set up Flutter
+      - name: Clone Flutter SDK
+        run: |
+          git clone https://github.com/flutter/flutter.git -b $FLUTTER_CHANNEL
+          echo "$(pwd)/flutter/bin" >> $GITHUB_PATH
+
+      - name: Verify Flutter installation
+        run: |
+          flutter --version
+          flutter doctor
+
+      # Step 4: Install Flutter dependencies
+      - name: Install Flutter dependencies
+        run: flutter pub get
+      # Step 5: Find app files and add to coverage report
+      - name: Run Coverage Helper
+        run: bash ./coverage.sh flutter_towerdefense_game
+
+      # Step 6: Run tests with coverage
+      - name: Run Flutter tests
+        run: flutter test --coverage
+
+      # Step 7: Upload coverage as artifact
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+      # Step 8: Setup LCOV Reporter
+      - name: Setup LCOV
+        uses: hrishikesh-kadam/setup-lcov@v1
+      # Step 9: Report Code coverage
+      - name: Report code coverage
+        uses: zgosalvez/github-actions-report-lcov@v4
+        with:
+          coverage-files: coverage/lcov.info
+          minimum-coverage: 90
+          artifact-name: coverage-html
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          update-comment: true

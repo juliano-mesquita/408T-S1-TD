@@ -10,14 +10,18 @@ dependencies:
   flutter:
     sdk: flutter
   flame: ^1.27.0
+  get_it: ^8.0.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
   test: ^1.25.15
+  custom_lint: ^0.7.5
 
 flutter:
   uses-material-design: true
-
- 
+  assets:
+    - assets/images/floor/
+    - assets/images/indios_garimpeiros/
+    - assets/images/

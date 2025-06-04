@@ -40,41 +40,33 @@ class MapComponent extends PositionComponent {
 
   final Set<Vector2> _occupiedTowerPositions = {};
 
-  late final Sprite towerSprite; 
+  late final Sprite towerSprite;
   late final Sprite enemySprite;
 
   int _enemyCount = 0;
-final int _maxEnemies = 10;
-Timer? _enemySpawnTimer;
+  final int _maxEnemies = 10;
+  Timer? _enemySpawnTimer;
 
-  MapComponent(
-    {
-      required this.mapObject
-    }
-  );
+  MapComponent({required this.mapObject});
 
   /// Finds the first top left road in them map
-  Vector2 findLeftTopMostRoadTile()
-  {
+  Vector2 findLeftTopMostRoadTile() {
     //TODO: Optimize to break after finding the first point when looking from top/left to bottom/right
-    final tiles = mapObject.points.map((row) => row.indexWhere((tile) => tile == TileType.road));
+    final tiles = mapObject.points.map(
+      (row) => row.indexWhere((tile) => tile == TileType.road),
+    );
     int minY = tiles.length;
     int minX = tiles.first;
-    for(int y = 0; y < mapObject.height; y++)
-    {
-      for(int x = 0; x < mapObject.width; x++)
-      {
-        if(mapObject.points[y][x] == TileType.road && x <= minX)
-        {
+    for (int y = 0; y < mapObject.height; y++) {
+      for (int x = 0; x < mapObject.width; x++) {
+        if (mapObject.points[y][x] == TileType.road && x <= minX) {
           minX = x;
         }
       }
     }
 
-    for(int y = 0; y < mapObject.height; y++)
-    {
-      if(mapObject.points[y][minX] == TileType.road && y <= minY)
-      {
+    for (int y = 0; y < mapObject.height; y++) {
+      if (mapObject.points[y][minX] == TileType.road && y <= minY) {
         minY = y;
       }
     }
@@ -87,44 +79,45 @@ Timer? _enemySpawnTimer;
     /// Intiliaze sprite images and variables
     await _initializeSprites();
 
-    towerSprite = Sprite(await Flame.images.load('indios_garimpeiros/indio_um.png'));
-    enemySprite = Sprite(await Flame.images.load('indios_garimpeiros/garimpeira.png'));
+    towerSprite = Sprite(
+      await Flame.images.load('indios_garimpeiros/indio_um.png'),
+    );
+    enemySprite = Sprite(
+      await Flame.images.load('indios_garimpeiros/garimpeira.png'),
+    );
 
     /// Set map scaled size
     _setMapScaledSize();
 
     /// Generate map
     await _generateMap();
+
     /// Adds an enemy every two seconds
     //TODO: Use correctly rules to add an enemy
-     _enemySpawnTimer = Timer.periodic(const Duration(seconds: 2), (_) {
-    if(_enemyCount < _maxEnemies){
-    _addEnemy();
-    } else{
-      _enemySpawnTimer?.cancel();
-    }
-     });
-    
+    _enemySpawnTimer = Timer.periodic(const Duration(seconds: 2), (_) {
+      if (_enemyCount < _maxEnemies) {
+        _addEnemy();
+      } else {
+        _enemySpawnTimer?.cancel();
+      }
+    });
+
     await super.onLoad();
   }
-  
-  
+
   /// Adds an enemy to the map
-  void _addEnemy()
-  {
-    if(_enemyCount>=_maxEnemies) return;
+  void _addEnemy() {
+    if (_enemyCount >= _maxEnemies) return;
     final firstRoadTilePos = findLeftTopMostRoadTile();
-    var firstRoadTile = _tiles[firstRoadTilePos.y.toInt()][firstRoadTilePos.x.toInt()];
+    var firstRoadTile =
+        _tiles[firstRoadTilePos.y.toInt()][firstRoadTilePos.x.toInt()];
     final List<List<int>> enemyPath = [];
     // Generates the enemy path
-    for(int y = 0; y < _tiles.length; y++)
-    {
+    for (int y = 0; y < _tiles.length; y++) {
       final List<int> column = [];
-      for(int x = 0; x < _tiles[y].length; x++)
-      {
+      for (int x = 0; x < _tiles[y].length; x++) {
         final tileInfo = _getTileInfo(x, y);
-        switch(tileInfo.type)
-        {
+        switch (tileInfo.type) {
           case TileType.grass:
             column.add(-1);
             break;
@@ -141,19 +134,23 @@ Timer? _enemySpawnTimer;
       }
       enemyPath.add(column);
     }
-    final enemy = EnemyComponent.build(
-      type: EnemyType.type1,
-      path: enemyPath,
-      startPos: firstRoadTilePos,
-      tiles: _tiles
-    )
-      ..sprite = enemySprite
-      ..size = Vector2(35, 35)
-      ..anchor = Anchor.topLeft
-      ..position = Vector2(firstRoadTile.topLeftPosition.x - firstRoadTile.width, firstRoadTile.topLeftPosition.y);
+    final enemy =
+        EnemyComponent.build(
+            type: EnemyType.type1,
+            path: enemyPath,
+            startPos: firstRoadTilePos,
+            tiles: _tiles,
+          )
+          ..sprite = enemySprite
+          ..size = Vector2(35, 35)
+          ..anchor = Anchor.topLeft
+          ..position = Vector2(
+            firstRoadTile.topLeftPosition.x - firstRoadTile.width,
+            firstRoadTile.topLeftPosition.y,
+          );
     add(enemy);
     _enemies.add(enemy);
-    _enemyCount ++;
+    _enemyCount++;
   }
 
   /// Calculates and scale map tile sizes
@@ -188,13 +185,10 @@ Timer? _enemySpawnTimer;
 
   /// Generates the map based on provided [mapObject] and
   /// scaled viewport sizes
-  Future<void> _generateMap() async
-  {
-    for(int tileIndexY = 0; tileIndexY < mapObject.height; tileIndexY++)
-    {
+  Future<void> _generateMap() async {
+    for (int tileIndexY = 0; tileIndexY < mapObject.height; tileIndexY++) {
       final List<SpriteComponent> tileRow = [];
-      for(int tileIndexX = 0; tileIndexX < mapObject.width; tileIndexX++)
-      {
+      for (int tileIndexX = 0; tileIndexX < mapObject.width; tileIndexX++) {
         var tileInfo = _getTileInfo(tileIndexX, tileIndexY);
 
         final left = (tileIndexX * _tileSize) + (_tileSize / 2);
@@ -202,21 +196,24 @@ Timer? _enemySpawnTimer;
 
         final rotationAngle = tileInfo.rotationAngle * (math.pi / 180);
 
-        final tile = TileComponent(
-          xMap: tileIndexX,
-          yMap: tileIndexY,
-          onTapDownCallback: handleTap
-        )
-          ..anchor=Anchor.center
-          ..size=Vector2(_tileSize, _tileSize)
-          ..position=Vector2(left, top)
-          ..angle=rotationAngle;
+        final tile =
+            TileComponent(
+                xMap: tileIndexX,
+                yMap: tileIndexY,
+                onTapDownCallback: handleTap,
+              )
+              ..anchor = Anchor.center
+              ..size = Vector2(_tileSize, _tileSize)
+              ..position = Vector2(left, top)
+              ..angle = rotationAngle;
         tile.sprite = tileInfo.sprite;
 
         tileRow.add(tile);
         add(tile);
         if (tileInfo.type == TileType.grass) {
-          _validTowerPositions.add(Vector2(tileIndexX.toDouble(), tileIndexY.toDouble()));
+          _validTowerPositions.add(
+            Vector2(tileIndexX.toDouble(), tileIndexY.toDouble()),
+          );
         }
       }
       _tiles.add(tileRow);
@@ -275,37 +272,27 @@ Timer? _enemySpawnTimer;
         // When we are surrounded by roads it means we are on a junction
         sprite = _tilesToSprite[TileType.roadJunction]!;
         tileType = TileType.roadJunction;
-      }
-      else if(isLeftTileRoad && isTopTileRoad)
-      {
+      } else if (isLeftTileRoad && isTopTileRoad) {
         // If left tile is road, and top also is, then we are in a turn
         sprite = _tilesToSprite[TileType.roadTurn]!;
         angle = 180;
         tileType = TileType.roadTurn;
-      }
-      else if(isLeftTileRoad && isBottomTileRoad)
-      {
+      } else if (isLeftTileRoad && isBottomTileRoad) {
         // If left tile is road, and bottom also is, then we are in a turn
         sprite = _tilesToSprite[TileType.roadTurn]!;
         angle = 90;
         tileType = TileType.roadTurn;
-      }
-      else if(isRightTileRoad && isTopTileRoad)
-      {
+      } else if (isRightTileRoad && isTopTileRoad) {
         // If right tile is road, and top also is, then we are in a turn
         sprite = _tilesToSprite[TileType.roadTurn]!;
         angle = 270;
         tileType = TileType.roadTurn;
-      }
-      else if(isRightTileRoad && isBottomTileRoad)
-      {
+      } else if (isRightTileRoad && isBottomTileRoad) {
         // If right tile is road, and bottom also is, then we are in a turn
         sprite = _tilesToSprite[TileType.roadTurn]!;
         angle = 0;
         tileType = TileType.roadTurn;
-      }
-      else if(isRightTileRoad || isLeftTileRoad)
-      {
+      } else if (isRightTileRoad || isLeftTileRoad) {
         // If left or right tile are roads, then we rotate the image 90 degrees
         angle = 90;
       }
@@ -314,50 +301,47 @@ Timer? _enemySpawnTimer;
     return Tile(sprite: sprite, rotationAngle: angle, type: tileType);
   }
 
-  void handleTap(int x, int y)
-  {
-    final isValidPosition = _validTowerPositions.any((pos) => pos.x == x && pos.y == y);
+  void handleTap(int x, int y) {
+    final isValidPosition = _validTowerPositions.any(
+      (pos) => pos.x == x && pos.y == y,
+    );
     final towerPosition = Vector2(x.toDouble(), y.toDouble());
-    final left = (x*_tileSize)+(_tileSize/2);
-    final top = (y*_tileSize)+(_tileSize/2);
+    final left = (x * _tileSize) + (_tileSize / 2);
+    final top = (y * _tileSize) + (_tileSize / 2);
 
     final towerGlobalPosition = Vector2(left, top);
 
-    if(!isValidPosition)
-    {
+    if (!isValidPosition) {
       debugPrint('Invalid tower position');
       _showErrorEffect(towerGlobalPosition);
       return;
     }
-    if (_occupiedTowerPositions.contains(towerPosition))
-    {
+    if (_occupiedTowerPositions.contains(towerPosition)) {
       debugPrint('Tower position already ocuppied');
       _showErrorEffect(towerGlobalPosition);
       return;
     }
-    final attributes = TowerAttributes(
-      damageModifier: 1.0,
-      reachModifier: 1.0,
-    );
-    
-    final tower = TowerComponent(
-      mapPos: towerPosition,
-      towerType: '',
-      tier: 1,
-      range: 1,
-      damage: 1,
-      attributes: attributes,
-    )
-      ..anchor=Anchor.center
-      ..position=towerGlobalPosition
-      ..sprite = towerSprite
-      ..size = Vector2.all(_tileSize);
+    final attributes = TowerAttributes(damageModifier: 1.0, reachModifier: 1.0);
+
+    final tower =
+        TowerComponent(
+            mapPos: towerPosition,
+            towerType: '',
+            tier: 1,
+            range: 1,
+            damage: 1,
+            attributes: attributes,
+          )
+          ..anchor = Anchor.center
+          ..position = towerGlobalPosition
+          ..sprite = towerSprite
+          ..size = Vector2.all(_tileSize);
     add(tower);
     _occupiedTowerPositions.add(towerPosition);
     _showSuccessEffect(towerGlobalPosition);
   }
 
-   Future<void> _showSuccessEffect(Vector2 position) async {
+  Future<void> _showSuccessEffect(Vector2 position) async {
     final effect = CircleComponent(
       radius: 20,
       position: position,

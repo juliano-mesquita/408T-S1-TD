@@ -2,9 +2,9 @@ import 'package:flame/components.dart';
 import 'package:flutter_towerdefense_game/game/component/health_bar_component.dart';
 
 enum EnemyType { type1, type2 }
+
 //TODO: add different sprites for different enemy types
-class EnemyComponent extends SpriteComponent
-{
+class EnemyComponent extends SpriteComponent {
   late final int health;
   late final int speed;
 
@@ -18,19 +18,15 @@ class EnemyComponent extends SpriteComponent
     required this.speed,
     required this.path,
     required this.startPos,
-    required this.tiles
+    required this.tiles,
   });
 
-
-  EnemyComponent.build(
-    {
-      required EnemyType type,
-      required this.path,
-      required this.startPos,
-      required this.tiles
-    }
-  )
-   {
+  EnemyComponent.build({
+    required EnemyType type,
+    required this.path,
+    required this.startPos,
+    required this.tiles,
+  }) {
     late HealthBarComponent healthBar;
     _pos = startPos;
     switch (type) {
@@ -44,21 +40,19 @@ class EnemyComponent extends SpriteComponent
         break;
     }
     healthBar = HealthBarComponent(
-  maxHealth: health.toDouble(),
-  currentHealth: health.toDouble(),
-)
-  ..position = Vector2(9, -8); // position above sprite
+      maxHealth: health.toDouble(),
+      currentHealth: health.toDouble(),
+    )..position = Vector2(9, -8); // position above sprite
 
-add(healthBar); // add as children
+    add(healthBar); // add as children
   }
 
-  Vector2 _nextPoint(Vector2 pos)
-  {
+  Vector2 _nextPoint(Vector2 pos) {
     final mapWidth = path[0].length;
     final mapHeight = path.length;
     final posX = pos.x.toInt();
     final posY = pos.y.toInt();
-    
+
     // Calculate neighbour tiles according to this reference:
     //     0       previousY     0
     // previousX       x       nextX
@@ -68,7 +62,7 @@ add(healthBar); // add as children
     final previousY = (posY - 1);
     final nextY = (posY + 1);
 
-    // Check whether calculated tiles are inside the map or not 
+    // Check whether calculated tiles are inside the map or not
     final hasTileInLeft = previousX >= 0 && previousX < mapWidth;
     final hasTileInRight = nextX >= 0 && nextX < mapWidth;
     final hasTileInTop = previousY >= 0 && previousY < mapHeight;
@@ -84,29 +78,24 @@ add(healthBar); // add as children
     // If bottom tile does exist, then get it.
     final mapTileBottomType = hasTileInBottom ? path[nextY][posX] : null;
     // Greater than 0 means a road type
-    if((mapTileBottomType ?? 0) > 0)
-    {
+    if ((mapTileBottomType ?? 0) > 0) {
       return Vector2(posX.toDouble(), nextY.toDouble());
     }
-    if((mapTileRightType ?? 0) > 0)
-    {
+    if ((mapTileRightType ?? 0) > 0) {
       return Vector2(nextX.toDouble(), posY.toDouble());
     }
-    if((mapTileTopType ?? 0) > 0)
-    {
+    if ((mapTileTopType ?? 0) > 0) {
       return Vector2(posX.toDouble(), previousY.toDouble());
     }
-    
-    if((mapTileLeftType ?? 0) > 0)
-    {
+
+    if ((mapTileLeftType ?? 0) > 0) {
       return Vector2(previousX.toDouble(), posY.toDouble());
     }
     throw Exception('Invalid position');
   }
 
   @override
-  void update(double dt)
-  {
+  void update(double dt) {
     // TODO: move enemy outside playable map and remove it from component tree
     var nextPos = _nextPoint(_pos);
 
@@ -114,17 +103,17 @@ add(healthBar); // add as children
 
     var currentTileXDiff = nextTile.center.x - center.x;
     var currentTileYDiff = nextTile.center.y - center.y;
-    
+
     // If we've reached the tile center we must find the next tile and move
     // the enemy towards the next tile center
-    if(currentTileXDiff.abs() < 1 && currentTileYDiff.abs() < 1)
-    {
+    if (currentTileXDiff.abs() < 1 && currentTileYDiff.abs() < 1) {
       // 0 means we've gone through it
       // Any number above it will be treated as "not interacted"
       //
       // Junctions have a number of 3. In other words, they must be "walked on" twice
       // in order to be counted as fully interacted with/finished
-      path[_pos.y.toInt()][_pos.x.toInt()] = (path[_pos.y.toInt()][_pos.x.toInt()]/3).floor();
+      path[_pos.y.toInt()][_pos.x.toInt()] =
+          (path[_pos.y.toInt()][_pos.x.toInt()] / 3).floor();
       _pos = nextPos;
       // Fetch next point
       nextPos = _nextPoint(_pos);
@@ -135,11 +124,8 @@ add(healthBar); // add as children
     var yDiff = nextTile.center.y - center.y;
 
     //TODO: Set enemy speed correctly
-    position.x += dt*stepX*xDiff.sign;
-    position.y += dt*stepY*yDiff.sign;
+    position.x += dt * stepX * xDiff.sign;
+    position.y += dt * stepY * yDiff.sign;
     super.update(dt);
   }
-
-
 }
-

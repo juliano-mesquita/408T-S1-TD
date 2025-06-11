@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:ui' show Paint;
-
 import 'package:flame/components.dart' hide Timer;
 import 'package:flame/effects.dart';
 import 'package:flame/extensions.dart';
@@ -143,9 +141,6 @@ class MapComponent extends PositionComponent {
             tiles: _tiles,
             onReachedEnd: () {
               playerHealth -= 1;
-              if (playerHealth <= 0) {
-                print("Game  Over");
-              }
             },
           )
           ..sprite = enemySprite

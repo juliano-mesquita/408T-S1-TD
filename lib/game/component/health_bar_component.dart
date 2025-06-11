@@ -6,8 +6,8 @@ class HealthBarComponent extends PositionComponent {
   double maxHealth;
   double currentHealth;
 
-  HealthBarComponent({required this.maxHealth, required this.currentHealth})
-    : super(size: Vector2(18, 4)); // healthbar size
+
+  HealthBarComponent({required this.maxHealth, required this.currentHealth});
 
   @override
   void render(Canvas canvas) {

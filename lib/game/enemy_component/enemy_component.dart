@@ -12,6 +12,7 @@ class EnemyComponent extends SpriteComponent {
   late final List<List<SpriteComponent>> tiles;
   final void Function()? onReachedEnd;
   late Vector2 _pos;
+  late HealthBarComponent healthBar;
 
   EnemyComponent({
     required this.health,
@@ -29,7 +30,6 @@ class EnemyComponent extends SpriteComponent {
     required this.tiles,
     this.onReachedEnd,
   }) {
-    late HealthBarComponent healthBar;
     _pos = startPos;
     switch (type) {
       case EnemyType.type1:
@@ -41,10 +41,19 @@ class EnemyComponent extends SpriteComponent {
         speed = 5;
         break;
     }
+  }
+
+  @override
+  Future<void> onLoad() async
+  {
+    super.onLoad();
+    final healthBarSize = Vector2(20, 4);
     healthBar = HealthBarComponent(
       maxHealth: health.toDouble(),
       currentHealth: health.toDouble(),
-    )..position = Vector2(9, -8); // position above sprite
+    )
+    ..size = healthBarSize
+    ..position = Vector2((width/2)-(healthBarSize.x/2), -10); // position above sprite
 
     add(healthBar); // add as children
   }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter_towerdefense_game/game/market_item.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_towerdefense_game/game/market/market_item.dart';
 
 class MarketInventory {
   final List<MarketItem> items;
@@ -31,7 +32,7 @@ class MarketInventory {
           description: 'Atira flechas nos inimigos com alta precisão.',
           price: 100,
           type: MarketItemType.tower,
-          icon: 'assets/images/floor/tower_arrow.png',
+          icon: 'assets/images/market/tower_arrow.png',
         ),
         MarketItem(
           id: 'upgrade1',
@@ -39,7 +40,7 @@ class MarketInventory {
           description: 'Aumenta o dano das torres em 20%.',
           price: 75,
           type: MarketItemType.upgrade,
-          icon: 'assets/images/floor/upgrade_arrow.png',
+          icon: 'assets/images/market/upgrade_arrow.png',
         ),
         MarketItem(
           id: 'resource1',
@@ -47,7 +48,7 @@ class MarketInventory {
           description: 'Recupera a vida das torres lentamente.',
           price: 50,
           type: MarketItemType.resource,
-          icon: 'assets/images/floor/forest_blessing.png',
+          icon: 'assets/images/market/forest_blessing.png',
         ),
       ],
     );
@@ -55,7 +56,7 @@ class MarketInventory {
 
   void printItems() {
     for (var item in items) {
-      print(item);
+      debugPrint('${item.name} - ${item.price} ouro');
     }
   }
 }

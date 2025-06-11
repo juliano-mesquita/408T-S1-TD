@@ -32,7 +32,7 @@ class MarketInventory {
           description: 'Atira flechas nos inimigos com alta precisão.',
           price: 100,
           type: MarketItemType.tower,
-          icon: 'assets/images/floor/tower_arrow.png',
+          icon: 'assets/images/market/tower_arrow.png',
         ),
         MarketItem(
           id: 'upgrade1',
@@ -40,7 +40,7 @@ class MarketInventory {
           description: 'Aumenta o dano das torres em 20%.',
           price: 75,
           type: MarketItemType.upgrade,
-          icon: 'assets/images/floor/upgrade_arrow.png',
+          icon: 'assets/images/market/upgrade_arrow.png',
         ),
         MarketItem(
           id: 'resource1',
@@ -48,7 +48,7 @@ class MarketInventory {
           description: 'Recupera a vida das torres lentamente.',
           price: 50,
           type: MarketItemType.resource,
-          icon: 'assets/images/floor/forest_blessing.png',
+          icon: 'assets/images/market/forest_blessing.png',
         ),
       ],
     );
@@ -56,7 +56,7 @@ class MarketInventory {
 
   void printItems() {
     for (var item in items) {
-      debugPrint(item.toString());
+      debugPrint('${item.name} - ${item.price} ouro');
     }
   }
 }

@@ -3,7 +3,6 @@ import 'package:flutter_towerdefense_game/game/component/health_bar_component.da
 
 enum EnemyType { type1, type2 }
 
-//TODO: add different sprites for different enemy types
 class EnemyComponent extends SpriteComponent {
   late final int health;
   late final int speed;
@@ -47,7 +46,7 @@ class EnemyComponent extends SpriteComponent {
     add(healthBar); // add as children
   }
 
-  Vector2 _nextPoint(Vector2 pos) {
+  Vector2? _nextPoint(Vector2 pos) {
     final mapWidth = path[0].length;
     final mapHeight = path.length;
     final posX = pos.x.toInt();
@@ -91,13 +90,20 @@ class EnemyComponent extends SpriteComponent {
     if ((mapTileLeftType ?? 0) > 0) {
       return Vector2(previousX.toDouble(), posY.toDouble());
     }
-    throw Exception('Invalid position');
+    return null;
   }
 
   @override
   void update(double dt) {
     // TODO: move enemy outside playable map and remove it from component tree
     var nextPos = _nextPoint(_pos);
+
+    if (nextPos == null) {
+      // O inimigo chegou ao final
+      //onReachedEnd?.call(); // Função que você vai criar para aplicar o dano
+      removeFromParent(); // Remove o inimigo da cena
+      return;
+    }
 
     final nextTile = tiles[nextPos.y.toInt()][nextPos.x.toInt()];
 

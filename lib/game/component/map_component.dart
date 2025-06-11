@@ -133,6 +133,7 @@ class MapComponent extends PositionComponent {
       }
       enemyPath.add(column);
     }
+    final enemySize = Vector2(35, 35);
     final enemy =
         EnemyComponent.build(
             type: EnemyType.type1,
@@ -144,11 +145,11 @@ class MapComponent extends PositionComponent {
             },
           )
           ..sprite = enemySprite
-          ..size = Vector2(35, 35)
-          ..anchor = Anchor.topLeft
+          ..size = enemySize
+          ..anchor = Anchor.center
           ..position = Vector2(
-            firstRoadTile.topLeftPosition.x - firstRoadTile.width,
-            firstRoadTile.topLeftPosition.y,
+            firstRoadTile.absoluteCenter.x - (enemySize.x/2),
+            firstRoadTile.absoluteCenter.y
           );
     add(enemy);
     _enemies.add(enemy);

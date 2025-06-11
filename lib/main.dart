@@ -18,17 +18,21 @@ void main() async
   market.printItems();
   final game = TowerDefenseGame();
   runApp(
-    GameWidget(
-      game: game,
-      initialActiveOverlays: const ['player', 'Market'],
-      overlayBuilderMap:
-      {
-        'Market': (context, towerdefensegame) => MarketComponent(item: market.items),
-        'player': (context, _)
-        {
-          return const PlayerHudWidget();
-        }
-      },
+    MaterialApp(
+      home: Scaffold(
+        body: GameWidget(
+          game: game,
+          initialActiveOverlays: const ['player', 'Market'],
+          overlayBuilderMap:
+          {
+            'Market': (context, towerdefensegame) => MarketComponent(item: market.items),
+            'player': (context, _)
+            {
+              return const PlayerHudWidget();
+            }
+          },
+        )
+      )
     )
   );
 }

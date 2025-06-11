@@ -15,7 +15,7 @@ class MarketComponent extends StatelessWidget {
       child: Container(
         height: 225,
         padding: const EdgeInsets.all(8),
-        color: Colors.black.withOpacity(0.7),
+        color: Colors.black.withValues(),
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: item.length,

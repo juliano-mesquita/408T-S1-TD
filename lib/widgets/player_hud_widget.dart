@@ -35,20 +35,20 @@ class _PlayerHudWidgetState extends State<PlayerHudWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topRight,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(_player.name, style: const TextStyle(color: Colors.red)),
-          const SizedBox(height: 4),
-          Text(
-            'Saldo: \$${_player.wallet.balance}',
-            style: const TextStyle(color: Colors.green),
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.topRight,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(_player.name, style: const TextStyle(color: Colors.red)),
+              const SizedBox(height: 4),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

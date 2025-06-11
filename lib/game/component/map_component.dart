@@ -42,6 +42,7 @@ class MapComponent extends PositionComponent {
 
   late final Sprite towerSprite;
   late final Sprite enemySprite;
+  int playerHealth = 5;
 
   int _enemyCount = 0;
   final int _maxEnemies = 10;
@@ -140,6 +141,12 @@ class MapComponent extends PositionComponent {
             path: enemyPath,
             startPos: firstRoadTilePos,
             tiles: _tiles,
+            onReachedEnd: () {
+              playerHealth -= 1;
+              if (playerHealth <= 0) {
+                print("Game  Over");
+              }
+            },
           )
           ..sprite = enemySprite
           ..size = Vector2(35, 35)

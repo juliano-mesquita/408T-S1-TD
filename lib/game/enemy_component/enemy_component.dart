@@ -10,6 +10,7 @@ class EnemyComponent extends SpriteComponent {
   late final List<List<int>> path;
   late final Vector2 startPos;
   late final List<List<SpriteComponent>> tiles;
+  final void Function()? onReachedEnd;
   late Vector2 _pos;
 
   EnemyComponent({
@@ -18,6 +19,7 @@ class EnemyComponent extends SpriteComponent {
     required this.path,
     required this.startPos,
     required this.tiles,
+    this.onReachedEnd,
   });
 
   EnemyComponent.build({
@@ -25,6 +27,7 @@ class EnemyComponent extends SpriteComponent {
     required this.path,
     required this.startPos,
     required this.tiles,
+    this.onReachedEnd,
   }) {
     late HealthBarComponent healthBar;
     _pos = startPos;
@@ -100,7 +103,7 @@ class EnemyComponent extends SpriteComponent {
 
     if (nextPos == null) {
       // O inimigo chegou ao final
-      //onReachedEnd?.call(); // Função que você vai criar para aplicar o dano
+      onReachedEnd?.call(); // Função que você vai criar para aplicar o dano
       removeFromParent(); // Remove o inimigo da cena
       return;
     }

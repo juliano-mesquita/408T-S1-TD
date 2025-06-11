@@ -1,5 +1,4 @@
 import 'package:flutter_towerdefense_game/controller/market_inventory_controller.dart';
-import 'package:flutter_towerdefense_game/game/market/market_item.dart';
 
 import 'market_item_widget.dart';
 import 'package:flutter/material.dart';

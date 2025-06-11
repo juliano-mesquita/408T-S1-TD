@@ -16,12 +16,30 @@ class MarketComponent extends StatelessWidget {
         height: 225,
         padding: const EdgeInsets.all(8),
         color: Colors.black.withValues(),
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: item.length,
-          itemBuilder: (context, index) {
-            return MarketItemWidget(item: item[index]);
-          },
+        child: Row(
+          children: [
+            Flexible(
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: item.length,
+                itemBuilder: (context, index) {
+                  return MarketItemWidget(item: item[index]);
+                },
+              ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  'assets/images/espelho_dindin.png',
+                  width: 60.0,
+                  height: 60.0,
+                ),
+                const SizedBox(width: 3.0),
+                Text('${0}', style: const TextStyle(color: Colors.green, fontSize: 35)),
+              ],
+            ),
+          ],
         ),
       ),
     );

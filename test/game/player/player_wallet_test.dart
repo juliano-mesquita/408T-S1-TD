@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_towerdefense_game/game/player/player_wallet.dart';
 
@@ -51,7 +52,7 @@ void main() {
       });
     });
   });
-  
+
   group('PlayerWallet - enoughCoins()', () {
     test(
       'should return true when balance is equal to or greater than price',
@@ -65,6 +66,48 @@ void main() {
     test('should return false when balance is less than price', () {
       final wallet = PlayerWallet(balance: 100);
       expect(wallet.enoughCoins(101), isFalse);
+    });
+  });
+ group('Market Balance Display', () {
+    const playerBalance = 123;
+
+    late Widget widgetUnderTest;
+
+    setUp(() {
+      widgetUnderTest = MaterialApp(
+        home: Scaffold(
+          body: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                'assets/images/espelho_dindin.png',
+                width: 60.0,
+                height: 60.0,
+              ),
+              const SizedBox(width: 3.0),
+              Text(
+                '$playerBalance',
+                key: const Key('info.user.balance'),
+                style: const TextStyle(color: Colors.green, fontSize: 35),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
+
+    testWidgets('should show the correct balance in the Text widget', (WidgetTester tester) async {
+      await tester.pumpWidget(widgetUnderTest);
+
+      // Encontra o Text com a key específica
+      final balanceTextFinder = find.byKey(const Key('info.user.balance'));
+
+      // Verifica se o widget foi encontrado
+      expect(balanceTextFinder, findsOneWidget);
+
+      // Verifica se o texto exibido é igual ao playerBalance
+      final Text textWidget = tester.widget(balanceTextFinder);
+      expect(textWidget.data, '$playerBalance');
     });
   });
 }

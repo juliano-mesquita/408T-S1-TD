@@ -96,16 +96,16 @@ void main() {
       );
     });
 
-    testWidgets('should show the correct balance in the Text widget', (WidgetTester tester) async {
+    testWidgets('should display the correct balance in the Text widget', (WidgetTester tester) async {
       await tester.pumpWidget(widgetUnderTest);
 
-      // Encontra o Text com a key específica
+      // Find the Text widget by its key
       final balanceTextFinder = find.byKey(const Key('info.user.balance'));
 
-      // Verifica se o widget foi encontrado
+      // Check that the Text widget is found
       expect(balanceTextFinder, findsOneWidget);
 
-      // Verifica se o texto exibido é igual ao playerBalance
+      // Get the Text widget and check the displayed value
       final Text textWidget = tester.widget(balanceTextFinder);
       expect(textWidget.data, '$playerBalance');
     });

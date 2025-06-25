@@ -69,7 +69,7 @@ void main() {
     });
   });
  group('Market Balance Display', () {
-    const playerBalance = 123;
+    const playerBalance = 100;
 
     late Widget widgetUnderTest;
 

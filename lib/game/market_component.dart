@@ -36,7 +36,7 @@ class MarketComponent extends StatelessWidget {
                   height: 60.0,
                 ),
                 const SizedBox(width: 3.0),
-                Text('${0}', style: const TextStyle(color: Colors.green, fontSize: 35)),
+                const Text('${0}', style: TextStyle(color: Colors.green, fontSize: 35)),
               ],
             ),
           ],

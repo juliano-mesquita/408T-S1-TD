@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_towerdefense_game/game/component/health_bar_component.dart';
 
 enum EnemyType { type1, type2 }
@@ -48,8 +49,9 @@ class EnemyComponent extends SpriteComponent {
 
     add(healthBar); // add as children
   }
-
-  Vector2? _nextPoint(Vector2 pos) {
+  
+  @visibleForTesting
+  Vector2? nextPoint(Vector2 pos) {
     final mapWidth = path[0].length;
     final mapHeight = path.length;
     final posX = pos.x.toInt();
@@ -99,7 +101,7 @@ class EnemyComponent extends SpriteComponent {
   @override
   void update(double dt) {
     // TODO: move enemy outside playable map and remove it from component tree
-    var nextPos = _nextPoint(_pos);
+    var nextPos = nextPoint(_pos);
 
     if (nextPos == null) {
       // O inimigo chegou ao final
@@ -125,7 +127,7 @@ class EnemyComponent extends SpriteComponent {
           (path[_pos.y.toInt()][_pos.x.toInt()] / 3).floor();
       _pos = nextPos;
       // Fetch next point
-      nextPos = _nextPoint(_pos);
+      nextPos = nextPoint(_pos);
     }
     const stepX = 50;
     const stepY = 50;

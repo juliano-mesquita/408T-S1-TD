@@ -91,7 +91,11 @@ class _MarketComponentState extends State<MarketComponent>
                       height: 60.0,
                     ),
                     const SizedBox(width: 3.0),
-                    const Text('${0}', style: TextStyle(color: Colors.green, fontSize: 35)),
+                    Text(
+                      '$_playerBalance',
+                      key: const Key('info.user.balance'),
+                      style: const TextStyle(color: Colors.green, fontSize: 35)
+                    ),
                   ],
                 ),
               ]

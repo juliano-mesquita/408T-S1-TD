@@ -27,7 +27,10 @@ void main() async
           initialActiveOverlays: const ['player', 'Market'],
           overlayBuilderMap:
           {
-            'Market': (context, towerdefensegame) => MarketComponent(marketInventoryController: GetIt.I<MarketInventoryController>()),
+            'Market': (context, towerdefensegame) => MarketComponent(
+              marketInventoryController: GetIt.I<MarketInventoryController>(),
+              playerController: GetIt.I<PlayerController>()
+            ),
             'player': (context, _)
             {
               return const PlayerHudWidget();

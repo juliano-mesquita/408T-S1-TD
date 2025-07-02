@@ -14,10 +14,13 @@ class VictoryScreenWidget extends StatelessWidget {
     children: [
       Center(child: Image.asset('assets/images/victory1.png')),
       Center(
-        child: ElevatedButton(
-          onPressed: onMenuButtonClicked,
-          child: const Text('Menu Principal'),
-        ),
+        child: Padding(
+          padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height*0.1),
+            child: ElevatedButton(
+            onPressed: onMenuButtonClicked,
+            child: const Text('Menu Principal'),
+          ),
+        )
       ),
     ],
   ),

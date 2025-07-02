@@ -14,10 +14,13 @@ class GameOverScreenWidget extends StatelessWidget {
     children: [
       Center(child: Image.asset('assets/images/gameover1.png')),
       Center(
-        child: ElevatedButton(
-          onPressed: onMenuButtonClicked,
-          child: const Text('Menu Principal'),
-        ),
+        child: Padding(
+          padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height*0.2),
+            child: ElevatedButton(
+            onPressed: onMenuButtonClicked,
+            child: const Text('Menu Principal'),
+          ),
+        )
       ),
     ],
   ),

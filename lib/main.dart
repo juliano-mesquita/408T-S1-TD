@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_towerdefense_game/controller/game_controller.dart';
+import 'package:flutter_towerdefense_game/controller/level_controller.dart';
 import 'package:flutter_towerdefense_game/controller/market_inventory_controller.dart';
 import 'package:flutter_towerdefense_game/game/market_component.dart';
 import 'package:flutter_towerdefense_game/game/market/market_inventory.dart';
@@ -21,7 +22,7 @@ void main() async
   final market = MarketInventory.loadStatic();
   debugPrint('--- Mercado Indígena ---');
   market.printItems();
-  final game = TowerDefenseGame(gameController: GetIt.I<GameController>());
+  final game = TowerDefenseGame(gameController: GetIt.I<GameController>(), levelController: GetIt.I<LevelController>());
   runApp(
     MaterialApp(
       home: Scaffold(
@@ -71,5 +72,6 @@ void _setupServices()
     }
   );
 
-  GetIt.I.registerSingleton(GameController());
+  final gameController = GetIt.I.registerSingleton(GameController());
+  GetIt.I.registerSingleton(LevelController(gameController: gameController));
 }

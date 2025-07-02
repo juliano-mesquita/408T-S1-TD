@@ -1,5 +1,6 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_towerdefense_game/controller/game_controller.dart';
 import 'package:flutter_towerdefense_game/controller/market_inventory_controller.dart';
 import 'package:flutter_towerdefense_game/game/market_component.dart';
 import 'package:flutter_towerdefense_game/game/market/market_inventory.dart';
@@ -8,6 +9,8 @@ import 'package:flutter_towerdefense_game/game/tower_defense_game.dart';
 import 'package:flutter_towerdefense_game/provider/player_provider.dart';
 import 'package:flutter_towerdefense_game/repository/market_repository.dart';
 import 'package:flutter_towerdefense_game/repository/player_repository.dart';
+import 'package:flutter_towerdefense_game/widgets/main_menu_widget.dart';
+import 'package:flutter_towerdefense_game/widgets/pause_menu_widget.dart';
 import 'package:flutter_towerdefense_game/widgets/player_hud_widget.dart';
 import 'package:get_it/get_it.dart';
 
@@ -18,15 +21,17 @@ void main() async
   final market = MarketInventory.loadStatic();
   debugPrint('--- Mercado Indígena ---');
   market.printItems();
-  final game = TowerDefenseGame();
+  final game = TowerDefenseGame(gameController: GetIt.I<GameController>());
   runApp(
     MaterialApp(
       home: Scaffold(
         body: GameWidget(
           game: game,
-          initialActiveOverlays: const ['player', 'Market'],
+          initialActiveOverlays: const ['main_menu'],
           overlayBuilderMap:
           {
+            'main_menu': (context, game) => MainMenuWidget(gameController: GetIt.I<GameController>()),
+            'pause_menu': (context, game) => PauseMenuWidget(gameController: GetIt.I<GameController>()),
             'Market': (context, towerdefensegame) => MarketComponent(
               marketInventoryController: GetIt.I<MarketInventoryController>(),
               playerController: GetIt.I<PlayerController>()
@@ -65,4 +70,6 @@ void _setupServices()
       return controller;
     }
   );
+
+  GetIt.I.registerSingleton(GameController());
 }

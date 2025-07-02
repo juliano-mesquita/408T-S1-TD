@@ -2,7 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_towerdefense_game/game/component/health_bar_component.dart';
 
-enum EnemyType { type1, type2 }
+enum EnemyType { type1, type2, type3 }
 
 class EnemyComponent extends SpriteComponent {
   late final int health;
@@ -35,30 +35,37 @@ class EnemyComponent extends SpriteComponent {
     switch (type) {
       case EnemyType.type1:
         health = 100;
-        speed = 15;
+        speed = 50;
         break;
       case EnemyType.type2:
         health = 200;
-        speed = 5;
+        speed = 30;
+        break;
+      case EnemyType.type3:
+        health = 75;
+        speed = 80;
         break;
     }
   }
 
   @override
-  Future<void> onLoad() async
-  {
+  Future<void> onLoad() async {
     super.onLoad();
     final healthBarSize = Vector2(20, 4);
-    healthBar = HealthBarComponent(
-      maxHealth: health.toDouble(),
-      currentHealth: health.toDouble(),
-    )
-    ..size = healthBarSize
-    ..position = Vector2((width/2)-(healthBarSize.x/2), -10); // position above sprite
+    healthBar =
+        HealthBarComponent(
+            maxHealth: health.toDouble(),
+            currentHealth: health.toDouble(),
+          )
+          ..size = healthBarSize
+          ..position = Vector2(
+            (width / 2) - (healthBarSize.x / 2),
+            -10,
+          ); // position above sprite
 
     add(healthBar); // add as children
   }
-  
+
   @visibleForTesting
   Vector2? nextPoint(Vector2 pos) {
     final mapWidth = path[0].length;
@@ -138,8 +145,8 @@ class EnemyComponent extends SpriteComponent {
       // Fetch next point
       nextPos = nextPoint(_pos);
     }
-    const stepX = 50;
-    const stepY = 50;
+    final stepX = speed.toDouble();
+    final stepY = speed.toDouble();
     var xDiff = nextTile.center.x - center.x;
     var yDiff = nextTile.center.y - center.y;
 

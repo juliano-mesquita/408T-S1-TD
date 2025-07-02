@@ -1,33 +1,27 @@
 import 'package:flutter/material.dart';
 
 class VictoryScreenWidget extends StatelessWidget {
-  const VictoryScreenWidget({super.key});
+  final VoidCallback onMenuButtonClicked;
+
+  const VictoryScreenWidget({super.key, required this.onMenuButtonClicked });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset('assets/victory1.png'),
-            const SizedBox(height: 20),
-            const Text(
-              'Você venceu!',
-              style: TextStyle(fontSize: 32, color: Colors.white),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Exemplo: retornar ao menu principal
-                Navigator.pushReplacementNamed(context, '/menu');
-              },
-              child: const Text('Menu Principal'),
-            ),
-          ],
+    body: SizedBox.expand(
+  child: Stack(
+    children: [
+      Center(child: Image.asset('assets/images/victory1.png')),
+      Center(
+        child: ElevatedButton(
+          onPressed: onMenuButtonClicked,
+          child: const Text('Menu Principal'),
         ),
       ),
+    ],
+  ),
+),
     );
   }
 }

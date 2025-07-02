@@ -68,19 +68,41 @@ class _MarketComponentState extends State<MarketComponent>
             height: 225,
             padding: const EdgeInsets.all(8),
             color: Colors.black.withValues(),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                return MarketItemWidget(
-                  item: items[index],
-                  canAfford: _playerBalance >= items[index].price
-                );
-              },
-            ),
+            child: Row(
+              children: [
+                Flexible(
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      return MarketItemWidget(
+                        item: items[index],
+                        canAfford: _playerBalance >= items[index].price
+                      );
+                    },
+                  )
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      'assets/images/espelho_dindin.png',
+                      width: 60.0,
+                      height: 60.0,
+                    ),
+                    const SizedBox(width: 3.0),
+                    Text(
+                      '$_playerBalance',
+                      key: const Key('info.user.balance'),
+                      style: const TextStyle(color: Colors.green, fontSize: 35)
+                    ),
+                  ],
+                ),
+              ]
+            )
           ),
         );
-      }
+      },
     );
   }
 }

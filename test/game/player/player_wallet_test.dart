@@ -51,7 +51,7 @@ void main() {
       });
     });
   });
-  
+
   group('PlayerWallet - enoughCoins()', () {
     test(
       'should return true when balance is equal to or greater than price',

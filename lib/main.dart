@@ -8,8 +8,6 @@ import 'package:flutter_towerdefense_game/game/tower_defense_game.dart';
 import 'package:flutter_towerdefense_game/provider/player_provider.dart';
 import 'package:flutter_towerdefense_game/repository/market_repository.dart';
 import 'package:flutter_towerdefense_game/repository/player_repository.dart';
-import 'package:flutter_towerdefense_game/widgets/end_screen/game_over_screen_widget.dart';
-import 'package:flutter_towerdefense_game/widgets/end_screen/victory_screen_widget.dart';
 import 'package:flutter_towerdefense_game/widgets/player_hud_widget.dart';
 import 'package:get_it/get_it.dart';
 
@@ -21,19 +19,22 @@ void main() async
   debugPrint('--- Mercado Indígena ---');
   market.printItems();
   final game = TowerDefenseGame();
-   runApp(
-     MaterialApp(
-       home: Scaffold(
-         body: GameWidget(
-           game: game,
-           initialActiveOverlays: const ['player', 'Market'],
-           overlayBuilderMap:
-           {
-             'Market': (context, towerdefensegame) => MarketComponent(marketInventoryController: GetIt.I<MarketInventoryController>()),
-             'player': (context, _)
-             {
-               return const PlayerHudWidget();
-             }
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        body: GameWidget(
+          game: game,
+          initialActiveOverlays: const ['player', 'Market'],
+          overlayBuilderMap:
+          {
+            'Market': (context, towerdefensegame) => MarketComponent(
+              marketInventoryController: GetIt.I<MarketInventoryController>(),
+              playerController: GetIt.I<PlayerController>()
+            ),
+            'player': (context, _)
+            {
+              return const PlayerHudWidget();
+            }
           },
          )
        )

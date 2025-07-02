@@ -3,14 +3,19 @@ import 'package:flutter_towerdefense_game/game/market/market_item.dart';
 
 class MarketItemWidget extends StatelessWidget {
   final MarketItem item;
-  final int playerGold = 100;
+  final bool canAfford;
 
-  const MarketItemWidget({super.key, required this.item});
+  const MarketItemWidget
+  (
+    {
+      super.key,
+      required this.item,
+      required this.canAfford
+    }
+  );
 
   @override
   Widget build(BuildContext context) {
-    final canAfford = playerGold >= item.price;
-
     return Card(
       color: canAfford ? Colors.green.shade100 : Colors.red.shade100,
       margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),

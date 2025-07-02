@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_towerdefense_game/controller/game_controller.dart';
 import 'package:flutter_towerdefense_game/controller/player_controller.dart';
 import 'package:flutter_towerdefense_game/game/player/player.dart';
 import 'package:get_it/get_it.dart';
@@ -14,6 +15,7 @@ class PlayerHudWidget extends StatefulWidget {
 class _PlayerHudWidgetState extends State<PlayerHudWidget> {
   final _playerController = GetIt.I<PlayerController>();
   late Player _player = _playerController.player;
+  final GameController _gameController = GetIt.I<GameController>();
 
   @override
   void initState() {
@@ -39,14 +41,23 @@ class _PlayerHudWidgetState extends State<PlayerHudWidget> {
       children: [
         Align(
           alignment: Alignment.topRight,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(_player.name, style: const TextStyle(color: Colors.red)),
-              const SizedBox(height: 4),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(_player.name, style: const TextStyle(color: Colors.red)),
+                  const SizedBox(height: 4),
+                ],
+              ),
+              IconButton(
+                icon: const Icon(Icons.pause_rounded),
+                onPressed: _gameController.pause,
+              ),
             ],
-          ),
+          )
         ),
       ],
     );

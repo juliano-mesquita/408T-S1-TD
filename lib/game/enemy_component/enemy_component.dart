@@ -35,6 +35,7 @@ class EnemyComponent extends SpriteComponent {
     switch (type) {
       case EnemyType.type1:
         health = 100;
+        // enemy movement may break if speed is set too high (it broke with 100 speed)
         speed = 50;
         break;
       case EnemyType.type2:
@@ -150,7 +151,6 @@ class EnemyComponent extends SpriteComponent {
     var xDiff = nextTile.center.x - center.x;
     var yDiff = nextTile.center.y - center.y;
 
-    //TODO: Set enemy speed correctly
     position.x += dt * stepX * xDiff.sign;
     position.y += dt * stepY * yDiff.sign;
     super.update(dt);

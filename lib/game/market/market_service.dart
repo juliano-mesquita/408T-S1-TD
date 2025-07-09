@@ -1,28 +1,26 @@
-import 'package:flutter_towerdefense_game/game/market/market_inventory.dart';
+import 'package:flutter_towerdefense_game/controller/market_inventory_controller.dart';
+import 'package:flutter_towerdefense_game/controller/player_controller.dart';
 import 'package:flutter_towerdefense_game/game/market/market_item.dart';
-import 'package:flutter_towerdefense_game/game/player/inventory/player_inventory.dart';
 import 'package:flutter_towerdefense_game/game/player/inventory/player_inventory_item.dart';
-import 'package:flutter_towerdefense_game/game/player/player_wallet.dart';
 
-class Market {
-  final MarketInventory marketInventory;
-  final PlayerWallet playerWallet;
-  final PlayerInventory playerInvetory;
+class MarketService {
+  final MarketInventoryController marketInventoryController;
+  final PlayerController playerController;
 
   MarketItem? _pendingTowerItem;
   MarketItem? get pendingTowerItem => _pendingTowerItem;
 
-  Market({
-    required this.marketInventory,
-    required this.playerWallet,
-    required this.playerInvetory,
+  MarketService({
+    required this.marketInventoryController,
+    required this.playerController
   });
 
   bool buyItem(MarketItem marketItem) {
-    if (!playerWallet.enoughCoins(marketItem.price)) {
+    final player = playerController.player;
+    if (!player.wallet.enoughCoins(marketItem.price)) {
       return false;
     }
-    playerWallet.balance -= marketItem.price;
+    playerController.balance -= marketItem.price;
     switch (marketItem.type) {
       case MarketItemType.tower:
         _buyTowerCustom(marketItem);
@@ -31,7 +29,7 @@ class Market {
         // TODO: Apply upgrade
         return true;
       case MarketItemType.resource:
-        playerInvetory.addItem(
+        player.inventory.addItem(
           PlayerInventoryItem(
             id: marketItem.id,
             name: marketItem.name,
@@ -53,11 +51,11 @@ class Market {
 
   void onPlaceCancelled()
   {
-    if(_pendingTowerItem != null)
+    if(_pendingTowerItem == null)
     {
       return;
     }
-    playerWallet.balance += _pendingTowerItem!.price;
+    playerController.balance += _pendingTowerItem!.price;
     _pendingTowerItem = null;
   }
 

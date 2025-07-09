@@ -5,13 +5,13 @@ import 'package:flame/game.dart';
 import 'package:flutter_towerdefense_game/controller/game_controller.dart';
 import 'package:flutter_towerdefense_game/controller/level_controller.dart';
 import 'package:flutter_towerdefense_game/game/component/map_component.dart';
-import 'package:flutter_towerdefense_game/game/market/market.dart';
+import 'package:flutter_towerdefense_game/game/market/market_service.dart';
 import 'package:flutter_towerdefense_game/game/enemy_component/enemy_component.dart';
 import 'package:flutter_towerdefense_game/models/enemy.dart';
 
 class TowerDefenseGame extends FlameGame
 {
-  final Market market;
+  final MarketService market;
   final GameController _gameController;
   final LevelController _levelController;
   // Instanciando o mapa

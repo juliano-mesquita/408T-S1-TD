@@ -1,23 +1,19 @@
 import 'package:flutter_towerdefense_game/controller/market_inventory_controller.dart';
 import 'package:flutter_towerdefense_game/controller/player_controller.dart';
-import 'package:flutter_towerdefense_game/game/market/market.dart';
-import 'package:flutter_towerdefense_game/game/component/map_component.dart';
-import 'package:flutter_towerdefense_game/game/market/market_item.dart';
+import 'package:flutter_towerdefense_game/game/market/market_service.dart';
 import 'market_item_widget.dart';
 import 'package:flutter/material.dart';
 
 class MarketComponent extends StatefulWidget {
   final MarketInventoryController marketInventoryController;
   final PlayerController playerController;
-  final Market market;
-  final MapComponent mapComponent;
+  final MarketService market;
 
   const MarketComponent({
     super.key,
     required this.marketInventoryController,
     required this.playerController,
-    required this.market,
-    required this.mapComponent,
+    required this.market
   });
 
   @override
@@ -74,7 +70,6 @@ class _MarketComponentState extends State<MarketComponent> {
                         canAfford: _playerBalance >= items[index].price,
                         onBuy: () {
                           widget.market.buyItem(item);
-                          setState(() {});
                         },
                       );
                     },

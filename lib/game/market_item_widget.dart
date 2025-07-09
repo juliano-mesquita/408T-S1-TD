@@ -45,18 +45,7 @@ class MarketItemWidget extends StatelessWidget {
             Text('Preço: ${item.price}'),
             const SizedBox(height: 4),
             ElevatedButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      canAfford
-                          ? 'Item comprado com sucesso!'
-                          : 'Você não tem ouro suficiente!',
-                    ),
-                    backgroundColor: canAfford ? Colors.green : Colors.red,
-                  ),
-                );
-              },
+              onPressed: onBuy,
               style: ElevatedButton.styleFrom(
                 backgroundColor: canAfford ? Colors.green : Colors.grey,
               ),

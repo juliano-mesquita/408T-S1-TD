@@ -8,7 +8,7 @@ import 'package:flutter_towerdefense_game/game/player/player_wallet.dart';
 class PlayerRepository
 {
   /// Hardcoded object for example purposes
-  PlayerWallet _playerWallet = PlayerWallet(balance: 0);
+  PlayerWallet _playerWallet = PlayerWallet(balance: 11111);
   /// Hardcoded object for example purposes
   String _name = 'Default';
 

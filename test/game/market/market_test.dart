@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_towerdefense_game/game/market/market.dart';
+import 'package:flutter_towerdefense_game/game/market/market_service.dart';
 import 'package:flutter_towerdefense_game/game/market/market_item.dart';
 import 'package:flutter_towerdefense_game/game/market/market_inventory.dart';
 import 'package:flutter_towerdefense_game/game/player/player_wallet.dart';

@@ -5,7 +5,7 @@ import 'package:flame/extensions.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_towerdefense_game/game/component/tile_component.dart';
-import 'package:flutter_towerdefense_game/game/market/market.dart';
+import 'package:flutter_towerdefense_game/game/market/market_service.dart';
 import 'package:flutter_towerdefense_game/game/market/market_item.dart';
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_attributes.dart';
@@ -40,7 +40,7 @@ class MapComponent extends PositionComponent {
   late final Sprite enemySprite;
   int playerHealth = 5;
 
-  final Market market;
+  final MarketService market;
 
   MapComponent({required this.mapObject, required this.market});
 
@@ -120,18 +120,21 @@ class MapComponent extends PositionComponent {
 
     final towerGlobalPosition = Vector2(left, top);
 
+    if(market.pendingTowerItem == null)
+    {
+      return;
+    }
+
     if (!isValidPosition) {
       debugPrint('Invalid tower position');
       _showErrorEffect(towerGlobalPosition);
+      market.onPlaceCancelled();
       return;
     }
     if (_occupiedTowerPositions.contains(towerPosition)) {
       debugPrint('Tower position already ocuppied');
       _showErrorEffect(towerGlobalPosition);
-      return;
-    }
-    if(_pendingTowerItem != null)
-    {
+      market.onPlaceCancelled();
       return;
     }
     // _pendingTowerItem
@@ -153,6 +156,7 @@ class MapComponent extends PositionComponent {
     add(tower);
     _occupiedTowerPositions.add(towerPosition);
     _showSuccessEffect(towerGlobalPosition);
+    market.onItemPlaced();
   }
 
   Future<void> _showSuccessEffect(Vector2 position) async {

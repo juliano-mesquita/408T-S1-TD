@@ -1,4 +1,5 @@
 
+import 'package:flutter_towerdefense_game/game/player/inventory/player_inventory.dart';
 import 'package:flutter_towerdefense_game/game/player/player.dart';
 import 'package:flutter_towerdefense_game/repository/player_repository.dart';
 import 'package:get_it/get_it.dart';
@@ -16,7 +17,11 @@ class PlayerProvider
   {
     final wallet = await _playerRepository.getWallet();
     final name = await _playerRepository.getPlayerName();
-    return Player(name: name, wallet: wallet);
+    return Player(
+      name: name,
+      wallet: wallet,
+      inventory: PlayerInventory(inventorySize: 12)
+    );
   }
 
   /// Sets the player [name]

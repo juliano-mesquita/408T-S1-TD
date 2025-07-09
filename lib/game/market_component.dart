@@ -73,11 +73,7 @@ class _MarketComponentState extends State<MarketComponent> {
                         item: items[index],
                         canAfford: _playerBalance >= items[index].price,
                         onBuy: () {
-                          final didBuy = widget.market.buyItem(item);
-
-                          if (didBuy && item.type == MarketItemType.tower) {
-                            widget.mapComponent.enablePlacementMode(item);
-                          }
+                          widget.market.buyItem(item);
                           setState(() {});
                         },
                       );

@@ -9,6 +9,9 @@ class Market {
   final PlayerWallet playerWallet;
   final PlayerInventory playerInvetory;
 
+  MarketItem? _pendingTowerItem;
+  MarketItem? get pendingTowerItem => _pendingTowerItem;
+
   Market({
     required this.marketInventory,
     required this.playerWallet,
@@ -22,7 +25,7 @@ class Market {
     playerWallet.balance -= marketItem.price;
     switch (marketItem.type) {
       case MarketItemType.tower:
-        _buyTowerCustom();
+        _buyTowerCustom(marketItem);
         return true;
       case MarketItemType.upgrade:
         // TODO: Apply upgrade
@@ -43,7 +46,23 @@ class Market {
     }
   }
 
-  void _buyTowerCustom() {
-    // TODO: Add tower to the map
+  void _buyTowerCustom(MarketItem item)
+  {
+    _pendingTowerItem = item;
+  }
+
+  void onPlaceCancelled()
+  {
+    if(_pendingTowerItem != null)
+    {
+      return;
+    }
+    playerWallet.balance += _pendingTowerItem!.price;
+    _pendingTowerItem = null;
+  }
+
+  void onItemPlaced()
+  {
+    _pendingTowerItem = null;
   }
 }

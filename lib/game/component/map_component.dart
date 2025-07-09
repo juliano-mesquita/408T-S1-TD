@@ -6,6 +6,7 @@ import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_towerdefense_game/game/component/tile_component.dart';
 import 'package:flutter_towerdefense_game/game/enemy_component/enemy_component.dart';
+import 'package:flutter_towerdefense_game/game/market/market.dart';
 import 'package:flutter_towerdefense_game/game/market/market_item.dart';
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_attributes.dart';
@@ -48,7 +49,9 @@ class MapComponent extends PositionComponent {
   final int _maxEnemies = 10;
   Timer? _enemySpawnTimer;
 
-  MapComponent({required this.mapObject});
+  final Market market;
+
+  MapComponent({required this.mapObject, required this.market});
 
   /// Finds the first top left road in them map
   Vector2 findLeftTopMostRoadTile() {
@@ -306,17 +309,6 @@ class MapComponent extends PositionComponent {
     return Tile(sprite: sprite, rotationAngle: angle, type: tileType);
   }
 
-  MarketItem? _pendingTowerItem;
-
-  void enablePlacementMode(MarketItem item) {
-    if (item.type != MarketItemType.tower) {
-      debugPrint('enablePlacementMode chamado com item inválido: ${item.type}');
-      return;
-    }
-    _pendingTowerItem = item;
-    debugPrint('Modo de posicionamento ativado para: ${item.name}');
-  }
-
   void handleTap(int x, int y) {
     final isValidPosition = _validTowerPositions.any(
       (pos) => pos.x == x && pos.y == y,
@@ -326,37 +318,6 @@ class MapComponent extends PositionComponent {
     final top = (y * _tileSize) + (_tileSize / 2);
 
     final towerGlobalPosition = Vector2(left, top);
-
-    if (_pendingTowerItem != null) {
-      debugPrint('Nenhum item pendente para colocar');
-      return;
-    }
-
-    if (_pendingTowerItem!.type != MarketItemType.tower) {
-      debugPrint('O item pendente não é uma torre');
-      _pendingTowerItem = null;
-      return;
-    }
-
-    bool _placeTower(int x, int y) {
-      final isValidPosition = _validTowerPositions.any(
-        (pos) => pos.x == x && pos.y == y,
-      );
-      final towerPosition = Vector2(x.toDouble(), y.toDouble());
-      final left = (x * _tileSize) + (_tileSize / 2);
-      final top = (y * _tileSize) + (_tileSize / 2);
-
-      final towerGlobalPosition = Vector2(left, top);
-      return false;
-    }
-
-    final placed = _placeTower(x, y);
-    if (placed) {
-      debugPrint('Torre posicionada com sucesso');
-      _pendingTowerItem = null;
-    } else {
-      debugPrint('Falha ao posicionar torre');
-    }
 
     if (!isValidPosition) {
       debugPrint('Invalid tower position');
@@ -368,6 +329,11 @@ class MapComponent extends PositionComponent {
       _showErrorEffect(towerGlobalPosition);
       return;
     }
+    if(_pendingTowerItem != null)
+    {
+      return;
+    }
+    // _pendingTowerItem
     final attributes = TowerAttributes(damageModifier: 1.0, reachModifier: 1.0);
 
     final tower =
@@ -386,7 +352,6 @@ class MapComponent extends PositionComponent {
     add(tower);
     _occupiedTowerPositions.add(towerPosition);
     _showSuccessEffect(towerGlobalPosition);
-    return;
   }
 
   Future<void> _showSuccessEffect(Vector2 position) async {

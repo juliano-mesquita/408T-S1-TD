@@ -3,11 +3,13 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter_towerdefense_game/controller/game_controller.dart';
 import 'package:flutter_towerdefense_game/game/component/map_component.dart';
+import 'package:flutter_towerdefense_game/game/market/market.dart';
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
 import 'package:flutter_towerdefense_game/models/map/tile_type.dart';
 
 class TowerDefenseGame extends FlameGame
 {
+  final Market market;
   final GameController _gameController;
   // Instanciando o mapa
   late final MapComponent mapComponent;
@@ -28,7 +30,7 @@ class TowerDefenseGame extends FlameGame
     ]
   );
 
-  TowerDefenseGame({required GameController gameController})
+  TowerDefenseGame({required GameController gameController, required this.market})
   :
     _gameController = gameController;
 
@@ -58,7 +60,8 @@ class TowerDefenseGame extends FlameGame
 
     add(
       MapComponent(
-        mapObject: _map
+        mapObject: _map,
+        market: market
       )
         // Where to render the map
         ..position = Vector2(0, 0)

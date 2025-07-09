@@ -1,53 +1,26 @@
 import 'package:flame/components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_towerdefense_game/game/component/health_bar_component.dart';
+import 'package:flutter_towerdefense_game/models/enemy.dart';
 
 enum EnemyType { type1, type2, type3 }
 
 class EnemyComponent extends SpriteComponent {
-  late final int health;
-  late final int speed;
-
-  late final List<List<int>> path;
+  final Enemy enemyData;
   late final Vector2 startPos;
   late final List<List<SpriteComponent>> tiles;
   final void Function()? onReachedEnd;
-  late Vector2 _pos;
+  Vector2 _pos;
   late HealthBarComponent healthBar;
 
   EnemyComponent({
-    required this.health,
-    required this.speed,
-    required this.path,
+    required this.enemyData,
     required this.startPos,
     required this.tiles,
     this.onReachedEnd,
-  });
-
-  EnemyComponent.build({
-    required EnemyType type,
-    required this.path,
-    required this.startPos,
-    required this.tiles,
-    this.onReachedEnd,
-  }) {
-    _pos = startPos;
-    switch (type) {
-      case EnemyType.type1:
-        health = 100;
-        // enemy movement may break if speed is set too high (it broke with 100 speed)
-        speed = 50;
-        break;
-      case EnemyType.type2:
-        health = 200;
-        speed = 30;
-        break;
-      case EnemyType.type3:
-        health = 75;
-        speed = 80;
-        break;
-    }
-  }
+  })
+  :
+    _pos = startPos.clone();
 
   @override
   Future<void> onLoad() async {
@@ -55,8 +28,8 @@ class EnemyComponent extends SpriteComponent {
     final healthBarSize = Vector2(20, 4);
     healthBar =
         HealthBarComponent(
-            maxHealth: health.toDouble(),
-            currentHealth: health.toDouble(),
+            maxHealth: enemyData.health.toDouble(),
+            currentHealth: enemyData.health.toDouble(),
           )
           ..size = healthBarSize
           ..position = Vector2(
@@ -69,8 +42,8 @@ class EnemyComponent extends SpriteComponent {
 
   @visibleForTesting
   Vector2? nextPoint(Vector2 pos) {
-    final mapWidth = path[0].length;
-    final mapHeight = path.length;
+    final mapWidth = enemyData.path[0].length;
+    final mapHeight = enemyData.path.length;
     final posX = pos.x.toInt();
     final posY = pos.y.toInt();
 
@@ -91,13 +64,13 @@ class EnemyComponent extends SpriteComponent {
 
     // Get each tile
     // If left tile does exist, then get it.
-    final mapTileLeftType = hasTileInLeft ? path[posY][previousX] : null;
+    final mapTileLeftType = hasTileInLeft ? enemyData.path[posY][previousX] : null;
     // If right tile does exist, then get it.
-    final mapTileRightType = hasTileInRight ? path[posY][nextX] : null;
+    final mapTileRightType = hasTileInRight ? enemyData.path[posY][nextX] : null;
     // If top tile does exist, then get it.
-    final mapTileTopType = hasTileInTop ? path[previousY][posX] : null;
+    final mapTileTopType = hasTileInTop ? enemyData.path[previousY][posX] : null;
     // If bottom tile does exist, then get it.
-    final mapTileBottomType = hasTileInBottom ? path[nextY][posX] : null;
+    final mapTileBottomType = hasTileInBottom ? enemyData.path[nextY][posX] : null;
     // Greater than 0 means a road type
     if ((mapTileBottomType ?? 0) > 0) {
       return Vector2(posX.toDouble(), nextY.toDouble());
@@ -140,14 +113,14 @@ class EnemyComponent extends SpriteComponent {
       //
       // Junctions have a number of 3. In other words, they must be "walked on" twice
       // in order to be counted as fully interacted with/finished
-      path[_pos.y.toInt()][_pos.x.toInt()] =
-          (path[_pos.y.toInt()][_pos.x.toInt()] / 3).floor();
+      enemyData.path[_pos.y.toInt()][_pos.x.toInt()] =
+          (enemyData.path[_pos.y.toInt()][_pos.x.toInt()] / 3).floor();
       _pos = nextPos;
       // Fetch next point
       nextPos = nextPoint(_pos);
     }
-    final stepX = speed.toDouble();
-    final stepY = speed.toDouble();
+    final stepX = enemyData.speed.toDouble();
+    final stepY = enemyData.speed.toDouble();
     var xDiff = nextTile.center.x - center.x;
     var yDiff = nextTile.center.y - center.y;
 

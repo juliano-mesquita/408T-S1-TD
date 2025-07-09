@@ -19,6 +19,7 @@ class VictoryScreenWidget extends StatelessWidget {
                   top: MediaQuery.sizeOf(context).height * 0.1,
                 ),
                 child: ElevatedButton(
+                  key: const Key('btn.main_menu'),
                   onPressed: onMenuButtonClicked,
                   child: const Text('Menu Principal'),
                 ),

@@ -4,15 +4,14 @@ import 'package:flutter_towerdefense_game/game/market/market_item.dart';
 class MarketItemWidget extends StatelessWidget {
   final MarketItem item;
   final bool canAfford;
+  final VoidCallback onBuy;
 
-  const MarketItemWidget
-  (
-    {
-      super.key,
-      required this.item,
-      required this.canAfford
-    }
-  );
+  const MarketItemWidget({
+    super.key,
+    required this.item,
+    required this.canAfford,
+    required this.onBuy,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +28,10 @@ class MarketItemWidget extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               item.name,
-              style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                overflow: TextOverflow.ellipsis,
+              ),
               maxLines: 1,
             ),
             Padding(

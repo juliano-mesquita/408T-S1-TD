@@ -1,66 +1,59 @@
 import 'package:flutter_towerdefense_game/controller/market_inventory_controller.dart';
 import 'package:flutter_towerdefense_game/controller/player_controller.dart';
-
+import 'package:flutter_towerdefense_game/game/market/market.dart';
+import 'package:flutter_towerdefense_game/game/component/map_component.dart';
+import 'package:flutter_towerdefense_game/game/market/market_item.dart';
 import 'market_item_widget.dart';
 import 'package:flutter/material.dart';
 
-class MarketComponent extends StatefulWidget
-{
+class MarketComponent extends StatefulWidget {
   final MarketInventoryController marketInventoryController;
   final PlayerController playerController;
+  final Market market;
+  final MapComponent mapComponent;
 
-  const MarketComponent
-  (
-    {
-      super.key,
-      required this.marketInventoryController,
-      required this.playerController
-    }
-  );
-  
+  const MarketComponent({
+    super.key,
+    required this.marketInventoryController,
+    required this.playerController,
+    required this.market,
+    required this.mapComponent,
+  });
+
   @override
   State<StatefulWidget> createState() => _MarketComponentState();
 }
 
-class _MarketComponentState extends State<MarketComponent>
-{
+class _MarketComponentState extends State<MarketComponent> {
   late int _playerBalance = widget.playerController.player.wallet.balance;
 
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
     widget.playerController.addListener(_onPlayerUpdate);
   }
 
   @override
-  void dispose()
-  {
+  void dispose() {
     widget.playerController.removeListener(_onPlayerUpdate);
     super.dispose();
   }
 
-  void _onPlayerUpdate()
-  {
+  void _onPlayerUpdate() {
     final player = widget.playerController.player;
-    if(player.wallet.balance == _playerBalance)
-    {
+    if (player.wallet.balance == _playerBalance) {
       return;
     }
-    setState(
-      ()
-      {
-        _playerBalance = player.wallet.balance;
-      }
-    );
+    setState(() {
+      _playerBalance = player.wallet.balance;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: widget.marketInventoryController,
-      builder: (context, value, child)
-      {
+      builder: (context, value, child) {
         final items = value?.items ?? [];
         return Align(
           alignment: Alignment.bottomCenter,
@@ -75,12 +68,21 @@ class _MarketComponentState extends State<MarketComponent>
                     scrollDirection: Axis.horizontal,
                     itemCount: items.length,
                     itemBuilder: (context, index) {
+                      final item = items[index];
                       return MarketItemWidget(
                         item: items[index],
-                        canAfford: _playerBalance >= items[index].price
+                        canAfford: _playerBalance >= items[index].price,
+                        onBuy: () {
+                          final didBuy = widget.market.buyItem(item);
+
+                          if (didBuy && item.type == MarketItemType.tower) {
+                            widget.mapComponent.enablePlacementMode(item);
+                          }
+                          setState(() {});
+                        },
                       );
                     },
-                  )
+                  ),
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
@@ -94,12 +96,12 @@ class _MarketComponentState extends State<MarketComponent>
                     Text(
                       '$_playerBalance',
                       key: const Key('info.user.balance'),
-                      style: const TextStyle(color: Colors.green, fontSize: 35)
+                      style: const TextStyle(color: Colors.green, fontSize: 35),
                     ),
                   ],
                 ),
-              ]
-            )
+              ],
+            ),
           ),
         );
       },

@@ -1,6 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_towerdefense_game/game/component/health_bar_component.dart';
+import 'package:flutter_towerdefense_game/game/tower/projectile_component.dart';
 
 enum EnemyType { type1, type2, type3 }
 
@@ -115,6 +116,13 @@ class EnemyComponent extends SpriteComponent {
     return null;
   }
 
+     void receiveDamage(double amount) {
+  health -= amount.toInt();
+  if (health <= 0) {
+    removeFromParent(); // Ou outro efeito de morte
+  }
+}
+
   @override
   void update(double dt) {
     // TODO: move enemy outside playable map and remove it from component tree
@@ -126,6 +134,7 @@ class EnemyComponent extends SpriteComponent {
       removeFromParent(); // Remove o inimigo da cena
       return;
     }
+
 
     final nextTile = tiles[nextPos.y.toInt()][nextPos.x.toInt()];
 

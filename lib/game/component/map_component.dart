@@ -324,14 +324,14 @@ class MapComponent extends PositionComponent {
       _showErrorEffect(towerGlobalPosition);
       return;
     }
-    final attributes = TowerAttributes(damageModifier: 1.0, reachModifier: 1.0);
+    final attributes = TowerAttributes(damageModifier: 1.0, reachModifier: 1.0, fireRate: 1.0);
 
     final tower =
         TowerComponent(
             mapPos: towerPosition,
             towerType: '',
-            tier: 1,
-            range: 1,
+            tier:1,
+            range: 90,
             damage: 1,
             attributes: attributes,
           )

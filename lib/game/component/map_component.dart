@@ -148,8 +148,8 @@ class MapComponent extends PositionComponent {
           ..size = enemySize
           ..anchor = Anchor.center
           ..position = Vector2(
-            firstRoadTile.absoluteCenter.x - (enemySize.x/2),
-            firstRoadTile.absoluteCenter.y
+            firstRoadTile.absoluteCenter.x - (enemySize.x / 2),
+            firstRoadTile.absoluteCenter.y,
           );
     add(enemy);
     _enemies.add(enemy);
@@ -332,8 +332,9 @@ class MapComponent extends PositionComponent {
             towerType: '',
             tier: 1,
             range: 100,
-            damage: 1,
+            damage: 5,
             attributes: attributes,
+            fireRate: 1,
           )
           ..anchor = Anchor.center
           ..position = towerGlobalPosition

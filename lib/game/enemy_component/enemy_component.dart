@@ -5,9 +5,9 @@ import 'package:flutter_towerdefense_game/game/component/health_bar_component.da
 enum EnemyType { type1, type2, type3 }
 
 class EnemyComponent extends SpriteComponent {
-  late final int health;
+  late final int maxHealth;
+  late int health;
   late final int speed;
-
   late final List<List<int>> path;
   late final Vector2 startPos;
   late final List<List<SpriteComponent>> tiles;
@@ -17,6 +17,7 @@ class EnemyComponent extends SpriteComponent {
 
   EnemyComponent({
     required this.health,
+    required this.maxHealth,
     required this.speed,
     required this.path,
     required this.startPos,
@@ -34,16 +35,19 @@ class EnemyComponent extends SpriteComponent {
     _pos = startPos;
     switch (type) {
       case EnemyType.type1:
-        health = 100;
+        maxHealth = 100;
+        health = maxHealth;
         // enemy movement may break if speed is set too high (it broke with 100 speed)
         speed = 50;
         break;
       case EnemyType.type2:
-        health = 200;
+        maxHealth = 200;
+        health = maxHealth;
         speed = 30;
         break;
       case EnemyType.type3:
-        health = 75;
+        maxHealth = 75;
+        health = maxHealth;
         speed = 80;
         break;
     }
@@ -117,7 +121,7 @@ class EnemyComponent extends SpriteComponent {
 
   @override
   void update(double dt) {
-    // TODO: move enemy outside playable map and remove it from component tree
+  
     var nextPos = nextPoint(_pos);
 
     if (nextPos == null) {
@@ -154,5 +158,12 @@ class EnemyComponent extends SpriteComponent {
     position.x += dt * stepX * xDiff.sign;
     position.y += dt * stepY * yDiff.sign;
     super.update(dt);
+  }
+  void receiveDamage(double amount) {
+    health -= amount.toInt();
+    healthBar.currentHealth = health.toDouble();
+    if (health <= 0) {
+      removeFromParent();
+    }
   }
 }

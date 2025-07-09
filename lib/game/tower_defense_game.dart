@@ -36,6 +36,7 @@ class TowerDefenseGame extends FlameGame
   Future<void> onLoad() async
   {
     await super.onLoad();
+    await images.load('indios_garimpeiros/cacique.png');
     _gameController.addOnStartListener(_onGameStart);
     _gameController.addOnPauseListener(_onPause);
     _gameController.addOnResumeListener(_onResume);

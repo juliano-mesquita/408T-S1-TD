@@ -11,7 +11,6 @@ import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_attributes.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_component.dart';
 import 'package:flutter_towerdefense_game/models/map/tile.dart';
-import 'package:flutter_towerdefense_game/game/market/market_item.dart';
 import 'dart:math' as math;
 
 import 'package:flutter_towerdefense_game/models/map/tile_type.dart';
@@ -338,19 +337,15 @@ class MapComponent extends PositionComponent {
       return;
     }
 
-    bool _placeTower(int x, int y) {
-      final isValidPosition = _validTowerPositions.any(
-        (pos) => pos.x == x && pos.y == y,
-      );
+    bool placeTower(int x, int y) {
+      (pos) => pos.x == x && pos.y == y;
       final towerPosition = Vector2(x.toDouble(), y.toDouble());
       final left = (x * _tileSize) + (_tileSize / 2);
       final top = (y * _tileSize) + (_tileSize / 2);
-
-      final towerGlobalPosition = Vector2(left, top);
       return false;
     }
 
-    final placed = _placeTower(x, y);
+    final placed = placeTower(x, y);
     if (placed) {
       debugPrint('Torre posicionada com sucesso');
       _pendingTowerItem = null;

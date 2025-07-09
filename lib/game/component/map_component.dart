@@ -331,7 +331,7 @@ class MapComponent extends PositionComponent {
             mapPos: towerPosition,
             towerType: '',
             tier: 1,
-            range: 1,
+            range: 100,
             damage: 1,
             attributes: attributes,
           )

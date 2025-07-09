@@ -1,3 +1,4 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_attributes.dart';
 
@@ -24,9 +25,21 @@ class TowerComponent extends SpriteComponent {
   }
 
   @override
-  Future<void> onLoad() async{
+  Future<void> onLoad() async {
     super.onLoad();
+    debugMode = true;
+
+    final double radius = range * tier;
+    
+    add(
+      CircleHitbox(
+        radius: radius,
+        anchor: Anchor.center,
+        position: size / 2,
+      )..collisionType = CollisionType.passive,
+    );
   }
+
 
   @override
   String toString()

@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_towerdefense_game/controller/game_controller.dart';
+import 'package:flutter_towerdefense_game/controller/level_controller.dart';
 import 'package:flutter_towerdefense_game/controller/market_inventory_controller.dart';
 import 'package:flutter_towerdefense_game/game/market_component.dart';
 import 'package:flutter_towerdefense_game/game/market/market_inventory.dart';
@@ -16,12 +17,12 @@ import 'package:get_it/get_it.dart';
 
 void main() async
 {
-  _setupServices();
+  await _setupServices();
 
   final market = MarketInventory.loadStatic();
   debugPrint('--- Mercado Indígena ---');
   market.printItems();
-  final game = TowerDefenseGame(gameController: GetIt.I<GameController>());
+  final game = TowerDefenseGame(gameController: GetIt.I<GameController>(), levelController: GetIt.I<LevelController>());
   runApp(
     MaterialApp(
       home: Scaffold(
@@ -39,6 +40,24 @@ void main() async
             'player': (context, _)
             {
               return const PlayerHudWidget();
+            },
+            'victory': (context, _)
+            {
+              return SizedBox.expand(
+                child: Container(
+                  color: Colors.green.withValues(alpha: 0.3),
+                  child: const Center(child: Text('Victory!')),
+                ),
+              );
+            },
+            'gameover': (context, _)
+            {
+              return SizedBox.expand(
+                child: Container(
+                  color: Colors.red.withValues(alpha: 0.3),
+                  child: const Center(child: Text('Game Over!')),
+                ),
+              );
             }
           },
         )
@@ -48,7 +67,7 @@ void main() async
 }
 
 
-void _setupServices()
+Future<void> _setupServices() async
 {
   GetIt.I.registerSingleton(PlayerRepository());
   GetIt.I.registerSingleton(PlayerProvider());
@@ -71,5 +90,13 @@ void _setupServices()
     }
   );
 
-  GetIt.I.registerSingleton(GameController());
+  final gameController = GetIt.I.registerSingleton(GameController());
+  GetIt.I.registerSingletonWithDependencies(
+    () => LevelController(
+      gameController: gameController,
+      playerController: GetIt.I<PlayerController>()
+    ),
+    dependsOn: [PlayerController]
+  );
+  await GetIt.I.allReady();
 }

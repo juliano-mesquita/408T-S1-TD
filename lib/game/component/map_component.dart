@@ -12,7 +12,6 @@ import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_attributes.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_component.dart';
 import 'package:flutter_towerdefense_game/models/map/tile.dart';
-import 'package:flutter_towerdefense_game/game/market/market_item.dart';
 import 'dart:math' as math;
 
 import 'package:flutter_towerdefense_game/models/map/tile_type.dart';

@@ -1,6 +1,8 @@
+import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter_towerdefense_game/models/map/tile.dart';
 import 'package:flutter_towerdefense_game/models/map/tile_type.dart';
+import 'dart:math' as math;
 
 /// Modelos pro mapa
 class MapObject
@@ -13,6 +15,8 @@ class MapObject
   final List<List<TileType>> points;
   /// The tiles to sprite map relationship
   final Map<TileType, Sprite> tilesToSprite;
+  /// The left top most road tile
+  late final Vector2 leftTopMostRoadTile;
 
   /// Construtor do objeto
   MapObject(
@@ -20,9 +24,12 @@ class MapObject
       required this.width,
       required this.height,
       required this.points,
-      required this.tilesToSprite
+      required this.tilesToSprite,
     }
-  );
+  )
+  {
+    leftTopMostRoadTile = _findLeftTopMostRoadTile();
+  }
 
   /// Gets tile info at (x,y). The returned object will contain information
   /// of tile sprite and rotation
@@ -104,5 +111,31 @@ class MapObject
     }
 
     return Tile(sprite: sprite, rotationAngle: angle, type: tileType);
+  }
+
+  Vector2 _findLeftTopMostRoadTile()
+  {
+    //TODO: Optimize to break after finding the first point when looking from top/left to bottom/right
+    final tiles = points.map(
+      (row) => row.indexWhere((tile) => tile == TileType.road),
+    );
+    int minY = tiles.length;
+    int minX = tiles.reduce(math.max);
+    
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        if (points[y][x] == TileType.road && x <= minX) {
+          minX = x;
+        }
+      }
+    }
+
+    for (int y = 0; y < height; y++) {
+      if (points[y][minX] == TileType.road && y <= minY) {
+        minY = y;
+      }
+    }
+
+    return Vector2(minX.toDouble(), minY.toDouble());
   }
 }

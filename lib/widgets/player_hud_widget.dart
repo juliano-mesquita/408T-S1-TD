@@ -44,14 +44,7 @@ class _PlayerHudWidgetState extends State<PlayerHudWidget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(_player.name, style: const TextStyle(color: Colors.red)),
-                  const SizedBox(height: 4),
-                ],
-              ),
+              Text('${_player.playerLevelHealth}%', style: const TextStyle(color: Colors.red)),
               IconButton(
                 icon: const Icon(Icons.pause_rounded),
                 onPressed: _gameController.pause,

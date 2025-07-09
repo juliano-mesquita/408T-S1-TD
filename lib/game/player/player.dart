@@ -6,12 +6,14 @@ class Player
   final PlayerWallet wallet;
   /// The player username
   String name;
+  int playerLevelHealth;
 
   Player
   (
     {
       required this.name,
-      required this.wallet
+      required this.wallet,
+      this.playerLevelHealth = 100
     }
   );
 

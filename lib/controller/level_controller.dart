@@ -2,28 +2,35 @@ import 'dart:async';
 
 import 'package:flame/components.dart' hide Timer;
 import 'package:flame/flame.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_towerdefense_game/controller/game_controller.dart';
+import 'package:flutter_towerdefense_game/controller/player_controller.dart';
 import 'package:flutter_towerdefense_game/game/enemy_component/enemy_component.dart';
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
+import 'package:flutter_towerdefense_game/models/enemy.dart';
 import 'package:flutter_towerdefense_game/models/map/tile_type.dart';
+
+typedef OnEnemySpawn = void Function(Enemy enemy);
 
 class CurrentLevel
 {
   final int level;
   final MapObject map;
   final int maxEnemies;
-  final List<EnemyComponent> enemies;
+  final List<Enemy> enemies;
   final int enemySpawnRate;
+  int playerHealth;
   
-  final List<List<int>> enemyPath = [];
+  final List<List<int>> _enemyPath = [];
+  List<List<int>> get enemyPath => List.unmodifiable(_enemyPath.map((e) => List.unmodifiable(e).cast<int>())).cast();
 
   CurrentLevel(
     {
       required this.level,
       required this.map,
       required this.maxEnemies,
-      required this.enemySpawnRate
+      required this.enemySpawnRate,
+      this.playerHealth = 100
     }
   )
     :
@@ -56,7 +63,7 @@ class CurrentLevel
             break;
         }
       }
-      enemyPath.add(column);
+      _enemyPath.add(column);
     }
   }
 }
@@ -64,6 +71,7 @@ class CurrentLevel
 class LevelController extends ValueNotifier<CurrentLevel?>
 {
   final GameController gameController;
+  final PlayerController playerController;
   Timer? _enemySpawnTimer;
 
   CurrentLevel? get currentLevel => value;
@@ -72,9 +80,13 @@ class LevelController extends ValueNotifier<CurrentLevel?>
 
   late final Map<TileType, Sprite> _tilesToSprite;
 
-  Map<TileType, Sprite> get tilesToSprite => Map.unmodifiable(_tilesToSprite); 
+  Map<TileType, Sprite> get tilesToSprite => Map.unmodifiable(_tilesToSprite);
 
-  LevelController({required this.gameController})
+  final List<OnEnemySpawn> _onEnemySpawnListeners = [];
+  final List<VoidCallback> _onGameOverListeners = [];
+  final List<VoidCallback> _onVictoryListeners = [];
+
+  LevelController({required this.gameController, required this.playerController})
   :
     super(null);
   
@@ -110,7 +122,7 @@ class LevelController extends ValueNotifier<CurrentLevel?>
       2: CurrentLevel(
         level: 2,
         maxEnemies: 15,
-        enemySpawnRate: 2,
+        enemySpawnRate: 1,
         map: MapObject(
           // largura
           width: 11,
@@ -174,54 +186,40 @@ class LevelController extends ValueNotifier<CurrentLevel?>
 
   void _onStart()
   {
+    _setupEnemySpawn();
+  }
+
+  void _onPause()
+  {
+    if(_enemySpawnTimer?.isActive == true)
+    {      
+      _enemySpawnTimer?.cancel();
+    }
+  }
+
+  void _onResume()
+  {
+    _setupEnemySpawn();
+  }
+
+  void _setupEnemySpawn()
+  {
     final level = currentLevel;
     if(level == null)
     {
       return;
     }
-    _enemySpawnTimer = Timer.periodic(const Duration(seconds: 2), (_) {
-      if (level.enemies.length < level.maxEnemies) {
-        _addEnemy(level);
-      } else {
-        _enemySpawnTimer?.cancel();
-      }
-    });
-  }
-
-  void _onPause()
-  {
-
-  }
-
-  void _onResume()
-  {
-
-  }
-
-  @visibleForTesting
-  Vector2 findLeftTopMostRoadTile(MapObject map)
-  {
-    //TODO: Optimize to break after finding the first point when looking from top/left to bottom/right
-    final tiles = map.points.map(
-      (row) => row.indexWhere((tile) => tile == TileType.road),
-    );
-    int minY = tiles.length;
-    int minX = tiles.first;
-    for (int y = 0; y < map.height; y++) {
-      for (int x = 0; x < map.width; x++) {
-        if (map.points[y][x] == TileType.road && x <= minX) {
-          minX = x;
+    _enemySpawnTimer = Timer.periodic(
+      Duration(seconds: level.enemySpawnRate),
+      (_)
+      {
+        if (level.enemies.length < level.maxEnemies) {
+          _addEnemy(level);
+        } else {
+          _enemySpawnTimer?.cancel();
         }
       }
-    }
-
-    for (int y = 0; y < map.height; y++) {
-      if (map.points[y][minX] == TileType.road && y <= minY) {
-        minY = y;
-      }
-    }
-
-    return Vector2(minX.toDouble(), minY.toDouble());
+    );
   }
 
   void _addEnemy(CurrentLevel level)
@@ -229,30 +227,185 @@ class LevelController extends ValueNotifier<CurrentLevel?>
     if (level.enemies.length >= level.maxEnemies)
     {
       return;
-    }
-    final firstRoadTilePos = findLeftTopMostRoadTile(level.map);
-    // var firstRoadTile = _tiles[firstRoadTilePos.y.toInt()][firstRoadTilePos.x.toInt()];
-    
-    final enemySize = Vector2(35, 35);
-    // final enemy =
-    //     EnemyComponent.build(
-    //         type: EnemyType.type1,
-    //         path: level.enemyPath,
-    //         startPos: firstRoadTilePos,
-    //         tiles: [],
-    //         onReachedEnd: () {
-    //           playerHealth -= 1;
-    //         },
-    //       )
-    //       // ..sprite = enemySprite
-    //       ..size = enemySize
-    //       ..anchor = Anchor.center
-    //       ..position = Vector2(
-    //         firstRoadTile.absoluteCenter.x - (enemySize.x/2),
-    //         firstRoadTile.absoluteCenter.y
-    //       );
-    // add(enemy);
-    // level.enemies.add(enemy);
+    }    
+    final enemy = Enemy.build(
+      type: EnemyType.type1,
+      path: List.from(level.enemyPath.map((e) => List.from(e).cast<int>())).cast()
+    );
+    level.enemies.add(enemy);
+    _notifyOnEnemySpawnListeners(enemy);
   }
 
+  void enemyReachedEnd(Enemy enemy)
+  {
+    if(currentLevel == null)
+    {
+      return;
+    }
+    if(!currentLevel!.enemies.contains(enemy))
+    {
+      return;
+    }
+    enemy.deactivated = true;
+    playerController.health -= 1;
+
+    final deactivatedEnemyCount = currentLevel!.enemies.where((enemy) => enemy.deactivated);
+
+    if(deactivatedEnemyCount.length == currentLevel!.maxEnemies)
+    {
+      _onAllEnemiesReachEnd();
+      return;
+    }
+    if(playerController.player.playerLevelHealth <= 0)
+    {
+      _onAllEnemiesReachEnd();
+    }
+  }
+
+  void _onAllEnemiesReachEnd()
+  {
+    if(_enemySpawnTimer?.isActive == true)
+    {
+      _enemySpawnTimer?.cancel();
+    }
+    final player = playerController.player;
+    if(player.playerLevelHealth > 0)
+    {
+      _notifyOnVictoryListeners();
+      return;
+    }
+    _notifyOnGameOverListeners();
+  }
+
+
+  //#region Start Listeners
+
+  void addOnEnemySpawnListener(OnEnemySpawn listener)
+  {
+    _onEnemySpawnListeners.add(listener);
+  }
+
+  void removeOnEnemySpawnListener(OnEnemySpawn listener)
+  {
+    _onEnemySpawnListeners.remove(listener);
+  }
+
+  void _notifyOnEnemySpawnListeners(Enemy enemy)
+  {
+    try
+    {
+      for(final listener in List.unmodifiable(_onEnemySpawnListeners))
+      {
+        listener.call(enemy);
+      }
+    }
+    catch (exception, stack)
+    {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: exception,
+          stack: stack,
+          library: 'foundation library',
+          context: ErrorDescription('while dispatching notifications for $runtimeType'),
+          informationCollector:
+              () => <DiagnosticsNode>[
+                DiagnosticsProperty<LevelController>(
+                  'The $runtimeType sending notification was',
+                  this,
+                  style: DiagnosticsTreeStyle.errorProperty,
+                ),
+              ],
+        ),
+      );
+    }
+  }
+
+//#endregion
+
+//#region Pause Listeners
+
+  void addOnGameOverListener(VoidCallback listener)
+  {
+    _onGameOverListeners.add(listener);
+  }
+
+  void removeOnGameOverListener(VoidCallback listener)
+  {
+    _onGameOverListeners.remove(listener);
+  }
+
+  void _notifyOnGameOverListeners()
+  {
+    try
+    {
+      for(final listener in List.unmodifiable(_onGameOverListeners))
+      {
+        listener.call();
+      }
+    }
+    catch (exception, stack)
+    {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: exception,
+          stack: stack,
+          library: 'foundation library',
+          context: ErrorDescription('while dispatching notifications for $runtimeType'),
+          informationCollector:
+              () => <DiagnosticsNode>[
+                DiagnosticsProperty<LevelController>(
+                  'The $runtimeType sending notification was',
+                  this,
+                  style: DiagnosticsTreeStyle.errorProperty,
+                ),
+              ],
+        ),
+      );
+    }
+  }
+
+//#endregion
+//#region Pause Listeners
+
+  void addOnVictoryListener(VoidCallback listener)
+  {
+    _onVictoryListeners.add(listener);
+  }
+
+  void removeOnVictoryListener(VoidCallback listener)
+  {
+    _onVictoryListeners.remove(listener);
+  }
+
+  void _notifyOnVictoryListeners()
+  {
+    try
+    {
+      for(final listener in List.unmodifiable(_onVictoryListeners))
+      {
+        listener.call();
+      }
+    }
+    catch (exception, stack)
+    {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: exception,
+          stack: stack,
+          library: 'foundation library',
+          context: ErrorDescription('while dispatching notifications for $runtimeType'),
+          informationCollector:
+              () => <DiagnosticsNode>[
+                DiagnosticsProperty<LevelController>(
+                  'The $runtimeType sending notification was',
+                  this,
+                  style: DiagnosticsTreeStyle.errorProperty,
+                ),
+              ],
+        ),
+      );
+    }
+  }
+
+//#endregion
 }

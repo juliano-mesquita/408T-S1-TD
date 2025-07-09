@@ -17,7 +17,7 @@ import 'package:get_it/get_it.dart';
 
 void main() async
 {
-  _setupServices();
+  await _setupServices();
 
   final market = MarketInventory.loadStatic();
   debugPrint('--- Mercado Indígena ---');
@@ -40,6 +40,24 @@ void main() async
             'player': (context, _)
             {
               return const PlayerHudWidget();
+            },
+            'victory': (context, _)
+            {
+              return SizedBox.expand(
+                child: Container(
+                  color: Colors.green.withValues(alpha: 0.3),
+                  child: const Center(child: Text('Victory!')),
+                ),
+              );
+            },
+            'gameover': (context, _)
+            {
+              return SizedBox.expand(
+                child: Container(
+                  color: Colors.red.withValues(alpha: 0.3),
+                  child: const Center(child: Text('Game Over!')),
+                ),
+              );
             }
           },
         )
@@ -49,7 +67,7 @@ void main() async
 }
 
 
-void _setupServices()
+Future<void> _setupServices() async
 {
   GetIt.I.registerSingleton(PlayerRepository());
   GetIt.I.registerSingleton(PlayerProvider());
@@ -73,5 +91,12 @@ void _setupServices()
   );
 
   final gameController = GetIt.I.registerSingleton(GameController());
-  GetIt.I.registerSingleton(LevelController(gameController: gameController));
+  GetIt.I.registerSingletonWithDependencies(
+    () => LevelController(
+      gameController: gameController,
+      playerController: GetIt.I<PlayerController>()
+    ),
+    dependsOn: [PlayerController]
+  );
+  await GetIt.I.allReady();
 }

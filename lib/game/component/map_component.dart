@@ -28,6 +28,8 @@ class MapComponent extends PositionComponent {
   /// A list of tiles generated for the map
   late final List<List<SpriteComponent>> _tiles = [];
 
+  List<List<SpriteComponent>> get tiles => List.unmodifiable(_tiles);
+
   final List<Vector2> _validTowerPositions = [];
 
   final Set<Vector2> _occupiedTowerPositions = {};

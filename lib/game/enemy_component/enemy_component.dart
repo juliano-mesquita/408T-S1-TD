@@ -1,3 +1,4 @@
+
 import 'package:flame/components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_towerdefense_game/game/component/health_bar_component.dart';
@@ -10,6 +11,7 @@ class EnemyComponent extends SpriteComponent {
   late final Vector2 startPos;
   late final List<List<SpriteComponent>> tiles;
   final void Function()? onReachedEnd;
+  final void Function()? onDeath;
   Vector2 _pos;
   late HealthBarComponent healthBar;
 
@@ -18,6 +20,7 @@ class EnemyComponent extends SpriteComponent {
     required this.startPos,
     required this.tiles,
     this.onReachedEnd,
+    this.onDeath,
   })
   :
     _pos = startPos.clone();
@@ -90,7 +93,7 @@ class EnemyComponent extends SpriteComponent {
 
   @override
   void update(double dt) {
-    // TODO: move enemy outside playable map and remove it from component tree
+  
     var nextPos = nextPoint(_pos);
 
     if (nextPos == null) {
@@ -127,5 +130,13 @@ class EnemyComponent extends SpriteComponent {
     position.x += dt * stepX * xDiff.sign;
     position.y += dt * stepY * yDiff.sign;
     super.update(dt);
+  }
+  void receiveDamage(double amount) {
+    enemyData.health -= amount.toInt();
+    healthBar.currentHealth = enemyData.health.toDouble();
+    if (enemyData.health <= 0) {
+      onDeath?.call();
+      removeFromParent();
+    }
   }
 }

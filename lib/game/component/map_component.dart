@@ -143,9 +143,10 @@ class MapComponent extends PositionComponent {
             mapPos: towerPosition,
             towerType: '',
             tier: 1,
-            range: 1,
-            damage: 1,
+            range: 100,
+            damage: 20,
             attributes: attributes,
+            fireRate: 1,
           )
           ..anchor = Anchor.center
           ..position = towerGlobalPosition

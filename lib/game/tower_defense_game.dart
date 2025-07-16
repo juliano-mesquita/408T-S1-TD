@@ -5,11 +5,13 @@ import 'package:flame/game.dart';
 import 'package:flutter_towerdefense_game/controller/game_controller.dart';
 import 'package:flutter_towerdefense_game/controller/level_controller.dart';
 import 'package:flutter_towerdefense_game/game/component/map_component.dart';
+import 'package:flutter_towerdefense_game/game/market/market_service.dart';
 import 'package:flutter_towerdefense_game/game/enemy_component/enemy_component.dart';
 import 'package:flutter_towerdefense_game/models/enemy.dart';
 
 class TowerDefenseGame extends FlameGame
 {
+  final MarketService market;
   final GameController _gameController;
   final LevelController _levelController;
   // Instanciando o mapa
@@ -19,7 +21,8 @@ class TowerDefenseGame extends FlameGame
   TowerDefenseGame(
     {
       required GameController gameController,
-      required LevelController levelController
+      required LevelController levelController,
+      required this.market
     }
   )
   :
@@ -68,7 +71,8 @@ class TowerDefenseGame extends FlameGame
     overlays.add('player');
     overlays.remove('main_menu');
     mapComponent = MapComponent(
-        mapObject: _levelController.currentLevel!.map
+        mapObject: _levelController.currentLevel!.map,
+        market: market
       )
         // Where to render the map
         ..position = Vector2(0, 0)

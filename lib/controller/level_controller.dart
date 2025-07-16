@@ -425,7 +425,6 @@ class LevelController extends ValueNotifier<CurrentLevel?> {
   }
 
   void enemyDeath(Enemy enemy) {
-    print('Enemy died');
     if (currentLevel == null) {
       return;
     }
@@ -437,9 +436,6 @@ class LevelController extends ValueNotifier<CurrentLevel?> {
     final deactivatedEnemyCount = currentLevel!.enemies.where(
       (enemy) => enemy.deactivated,
     );
-
-    print('deactivatedEnemyCount: $deactivatedEnemyCount');
-    print('currentLevel: ${currentLevel?.maxEnemies}');
 
     if (deactivatedEnemyCount.length != currentLevel!.maxEnemies) {
       return;

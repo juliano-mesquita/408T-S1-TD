@@ -68,7 +68,6 @@ class TowerComponent extends SpriteComponent with HasGameRef, TapCallbacks {
     if (target == null || !target!.isMounted) return;
 
     // Tower projectile
-    print('target: $target, fireTimer.finished: ${fireTimer.finished}');
     final projectile = ProjectileComponent(
       target: target!,
       startPosition: position.clone(),

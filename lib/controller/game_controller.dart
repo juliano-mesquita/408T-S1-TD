@@ -24,7 +24,8 @@ class GameController
 {
   final List<VoidCallback> _onStartListeners = [];
   final List<VoidCallback> _onPauseListeners = [];
-  final List<VoidCallback> _onResumeListeners = []; 
+  final List<VoidCallback> _onResumeListeners = [];
+  final List<VoidCallback> _onMainMenuListeners = []; 
   GameData _state;
 
   GameData get game => _state;
@@ -54,6 +55,13 @@ class GameController
     assert(_state.state == GameState.paused, 'Cannot resume a game that is not paused');
     _state = GameData(state: GameState.running);
     notifyOnResumeListeners();
+  }
+
+  void goToMainMenu()
+  {
+    assert(_state.state != GameState.mainMenu, 'Cannot go to main menu when game is already in main menu');
+    _state = GameData(state: GameState.mainMenu);
+    notifyOnMainMenuListeners();
   }
 
 //#region Start Listeners
@@ -161,6 +169,49 @@ class GameController
     try
     {
       for(final listener in List.unmodifiable(_onResumeListeners))
+      {
+        listener.call();
+      }
+    }
+    catch (exception, stack)
+    {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: exception,
+          stack: stack,
+          library: 'foundation library',
+          context: ErrorDescription('while dispatching notifications for $runtimeType'),
+          informationCollector:
+              () => <DiagnosticsNode>[
+                DiagnosticsProperty<GameController>(
+                  'The $runtimeType sending notification was',
+                  this,
+                  style: DiagnosticsTreeStyle.errorProperty,
+                ),
+              ],
+        ),
+      );
+    }
+  }
+//#endregion
+
+//#region Resume Listeners
+
+  void addOnMainMenuListener(VoidCallback listener)
+  {
+    _onMainMenuListeners.add(listener);
+  }
+
+  void removeOnMainMenuListener(VoidCallback listener)
+  {
+    _onMainMenuListeners.remove(listener);
+  }
+
+  void notifyOnMainMenuListeners()
+  {
+    try
+    {
+      for(final listener in List.unmodifiable(_onMainMenuListeners))
       {
         listener.call();
       }

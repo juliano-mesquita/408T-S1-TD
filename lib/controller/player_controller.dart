@@ -22,6 +22,14 @@ class PlayerController extends ChangeNotifier
     notifyListeners();
   } 
 
+  int get balance => _player.wallet.balance;
+
+  set balance(int value)
+  {
+    _player.wallet.balance = value;
+    notifyListeners();
+  } 
+
   Future<void> init() async
   {
     _player = await _playerProvider.getPlayer();

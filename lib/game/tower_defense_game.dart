@@ -33,6 +33,8 @@ class TowerDefenseGame extends FlameGame
     _enemySprite = Sprite(
       await Flame.images.load('indios_garimpeiros/garimpeira.png'),
     );
+    await Flame.images.load('pedra_dois.png');
+   
     await _levelController.init();
     _gameController.addOnStartListener(_onGameStart);
     _gameController.addOnPauseListener(_onPause);
@@ -117,7 +119,11 @@ class TowerDefenseGame extends FlameGame
         onReachedEnd: ()
         {
           _levelController.enemyReachedEnd(enemy);
-        }
+        },
+        onDeath: ()
+        {
+          _levelController.enemyDeath(enemy);
+        },
       )
       ..sprite = _enemySprite
       ..size = enemySize

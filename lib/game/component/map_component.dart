@@ -121,11 +121,6 @@ class MapComponent extends PositionComponent {
       _showErrorEffect(towerGlobalPosition);
       return;
     }
-    if (_occupiedTowerPositions.contains(towerPosition)) {
-      debugPrint('Tower position already ocuppied');
-      _showErrorEffect(towerGlobalPosition);
-      return;
-    }
     final attributes = TowerAttributes(damageModifier: 1.0, reachModifier: 1.0);
 
     final tower =
@@ -134,7 +129,7 @@ class MapComponent extends PositionComponent {
             towerType: '',
             tier: 1,
             range: 100,
-            damage: 5,
+            damage: 20,
             attributes: attributes,
             fireRate: 1,
           )
@@ -143,8 +138,14 @@ class MapComponent extends PositionComponent {
           ..sprite = towerSprite
           ..size = Vector2.all(_tileSize);
     add(tower);
+        if (_occupiedTowerPositions.contains(towerPosition)) {
+      debugPrint('Tower position already ocuppied');
+      _showRadius(towerGlobalPosition, tower.realTowerRadius);
+     return;
+            }
     _occupiedTowerPositions.add(towerPosition);
-    _showSuccessEffect(towerGlobalPosition);
+     _showSuccessEffect(towerGlobalPosition);
+    
   }
 
   Future<void> _showSuccessEffect(Vector2 position) async {
@@ -165,6 +166,21 @@ class MapComponent extends PositionComponent {
     );
     Future.delayed(
       const Duration(milliseconds: 500),
+      () => effect.removeFromParent(),
+    );
+  }
+
+  Future<void> _showRadius(Vector2 position, double realTowerRadius) async {
+    final effect = CircleComponent(
+      radius: realTowerRadius,
+      position: position,
+      paint: Paint()..color = const Color(0x7700FF00),
+      anchor: Anchor.center,
+      priority: 2,
+    );
+    add(effect);
+    Future.delayed(
+      const Duration(milliseconds: 1000),
       () => effect.removeFromParent(),
     );
   }

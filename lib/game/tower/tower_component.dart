@@ -1,6 +1,5 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flutter_towerdefense_game/game/component/map_component.dart';
 import 'package:flutter_towerdefense_game/game/enemy_component/enemy_component.dart';
 import 'package:flutter_towerdefense_game/game/tower/projectile_component.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_attributes.dart';
@@ -16,6 +15,8 @@ class TowerComponent extends SpriteComponent with HasGameRef {
   final double fireRate;
   EnemyComponent? target;
 
+  final double realTowerRadius;
+
   TowerComponent({
     required this.towerType,
     required this.tier,
@@ -24,7 +25,9 @@ class TowerComponent extends SpriteComponent with HasGameRef {
     required this.mapPos,
     required this.attributes,
     required this.fireRate,
-  }) {
+  })
+    : realTowerRadius = range * tier
+  {
     position = mapPos;
     anchor = Anchor.center;
     size = Vector2.all(32);
@@ -34,14 +37,13 @@ class TowerComponent extends SpriteComponent with HasGameRef {
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    debugMode = true;
+    // debugMode = true;
 
     fireTimer = Timer(fireRate, onTick: shoot, repeat: false);
 
-    final double radius = range * tier;
 
     add(
-      CircleHitbox(radius: radius, anchor: Anchor.center, position: size / 2)
+      CircleHitbox(radius: realTowerRadius, anchor: Anchor.center, position: size / 2)
         ..collisionType = CollisionType.passive,
     );
   }
@@ -70,7 +72,7 @@ class TowerComponent extends SpriteComponent with HasGameRef {
       startPosition: position.clone(),
       speed: 550, // pixels/segundo
       damage: damage,
-      sprite: Sprite(gameRef.images.fromCache('indios_garimpeiros/cacique.png')),
+      sprite: Sprite(gameRef.images.fromCache('pedra_dois.png')),
     );
 
     gameRef.add(projectile);
@@ -85,7 +87,7 @@ class TowerComponent extends SpriteComponent with HasGameRef {
   EnemyComponent? findTargetInRange() {
     // Logic to find a target in range
 
-    final enemies = gameRef.children.whereType<MapComponent>().first.children.whereType<EnemyComponent>();
+    final enemies = gameRef.children.whereType<EnemyComponent>();
     for (final enemy in enemies) {
       if (enemy.position.distanceTo(position) <= range * tier) {
         return enemy;

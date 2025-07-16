@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_towerdefense_game/controller/game_controller.dart';
 import 'package:flutter_towerdefense_game/controller/level_controller.dart';
 import 'package:flutter_towerdefense_game/controller/market_inventory_controller.dart';
+import 'package:flutter_towerdefense_game/game/market/market_service.dart';
 import 'package:flutter_towerdefense_game/game/market_component.dart';
 import 'package:flutter_towerdefense_game/game/market/market_inventory.dart';
 import 'package:flutter_towerdefense_game/controller/player_controller.dart';
@@ -22,7 +23,11 @@ void main() async
   final market = MarketInventory.loadStatic();
   debugPrint('--- Mercado Indígena ---');
   market.printItems();
-  final game = TowerDefenseGame(gameController: GetIt.I<GameController>(), levelController: GetIt.I<LevelController>());
+  final game = TowerDefenseGame(
+    gameController: GetIt.I<GameController>(),
+    levelController: GetIt.I<LevelController>(),
+    market: GetIt.I<MarketService>()
+  );
   runApp(
     MaterialApp(
       home: Scaffold(
@@ -35,7 +40,8 @@ void main() async
             'pause_menu': (context, game) => PauseMenuWidget(gameController: GetIt.I<GameController>()),
             'Market': (context, towerdefensegame) => MarketComponent(
               marketInventoryController: GetIt.I<MarketInventoryController>(),
-              playerController: GetIt.I<PlayerController>()
+              playerController: GetIt.I<PlayerController>(),
+              market: GetIt.I<MarketService>(),
             ),
             'player': (context, _)
             {
@@ -55,7 +61,15 @@ void main() async
               return SizedBox.expand(
                 child: Container(
                   color: Colors.red.withValues(alpha: 0.3),
-                  child: const Center(child: Text('Game Over!')),
+                  child: Center(
+                    child: ElevatedButton(
+                      child: const Text('Game Over!'),
+                      onPressed: ()
+                      {
+                        GetIt.I<GameController>().goToMainMenu();
+                      }
+                    )
+                  ),
                 ),
               );
             }
@@ -97,6 +111,14 @@ Future<void> _setupServices() async
       playerController: GetIt.I<PlayerController>()
     ),
     dependsOn: [PlayerController]
+  );
+
+  GetIt.I.registerSingletonWithDependencies(
+    () => MarketService(
+      marketInventoryController: GetIt.I<MarketInventoryController>(),
+      playerController: GetIt.I<PlayerController>(),
+    ),
+    dependsOn: [MarketInventoryController, PlayerController]
   );
   await GetIt.I.allReady();
 }

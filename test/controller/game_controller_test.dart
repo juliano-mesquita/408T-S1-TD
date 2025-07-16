@@ -110,6 +110,32 @@ void main()
           );
         }
       );
+
+      group(
+        'when main menu',
+        ()
+        {
+          test(
+            'is called it should notify listeners',
+            ()
+            {
+              final listenerMocked = MockCallable();
+              gameController.addOnMainMenuListener(listenerMocked.callMethod);
+              verifyNever(listenerMocked.callMethod());
+              gameController.goToMainMenu();
+              verify(listenerMocked.callMethod()).called(1);
+            }
+          );
+
+          test(
+            'is and game is on main menu it should throw assertation error',
+            ()
+            {
+              expect(() => gameController.goToMainMenu(), throwsAssertionError);
+            }
+          );
+        }
+      );
     }
   );
 }

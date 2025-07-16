@@ -5,21 +5,24 @@ import 'package:flame/game.dart';
 import 'package:flutter_towerdefense_game/controller/game_controller.dart';
 import 'package:flutter_towerdefense_game/controller/level_controller.dart';
 import 'package:flutter_towerdefense_game/game/component/map_component.dart';
+import 'package:flutter_towerdefense_game/game/market/market_service.dart';
 import 'package:flutter_towerdefense_game/game/enemy_component/enemy_component.dart';
 import 'package:flutter_towerdefense_game/models/enemy.dart';
 
 class TowerDefenseGame extends FlameGame
 {
+  final MarketService market;
   final GameController _gameController;
   final LevelController _levelController;
   // Instanciando o mapa
-  late final MapComponent mapComponent;
+  late MapComponent mapComponent;
   late final Sprite _enemySprite;
 
   TowerDefenseGame(
     {
       required GameController gameController,
-      required LevelController levelController
+      required LevelController levelController,
+      required this.market
     }
   )
   :
@@ -39,6 +42,7 @@ class TowerDefenseGame extends FlameGame
     _gameController.addOnStartListener(_onGameStart);
     _gameController.addOnPauseListener(_onPause);
     _gameController.addOnResumeListener(_onResume);
+    _gameController.addOnMainMenuListener(_onMainMenu);
     _levelController.addOnEnemySpawnListener(_onEnemySpawn);
     _levelController.addOnVictoryListener(_onVictory);
     _levelController.addOnGameOverListener(_onGameOver);
@@ -50,6 +54,7 @@ class TowerDefenseGame extends FlameGame
     _gameController.removeOnStartListener(_onGameStart);
     _gameController.removeOnPauseListener(_onPause);
     _gameController.removeOnResumeListener(_onResume);
+    _gameController.removeOnMainMenuListener(_onMainMenu);
     _levelController.removeOnEnemySpawnListener(_onEnemySpawn);
     _levelController.removeOnVictoryListener(_onVictory);
     _levelController.removeOnGameOverListener(_onGameOver);
@@ -58,11 +63,18 @@ class TowerDefenseGame extends FlameGame
  
   Future<void> _onGameStart() async
   {
+    paused = false;
+    final maps = List<MapComponent>.unmodifiable(children.whereType<MapComponent>());
+    final enemies = List<EnemyComponent>.unmodifiable(children.whereType<EnemyComponent>());
+    removeAll(maps);
+    removeAll(enemies);
+
     overlays.add('Market');
     overlays.add('player');
     overlays.remove('main_menu');
     mapComponent = MapComponent(
-        mapObject: _levelController.currentLevel!.map
+        mapObject: _levelController.currentLevel!.map,
+        market: market
       )
         // Where to render the map
         ..position = Vector2(0, 0)
@@ -89,6 +101,15 @@ class TowerDefenseGame extends FlameGame
     overlays.add('player');
     overlays.remove('pause_menu');
     paused = false;
+  }
+
+  void _onMainMenu()
+  {
+    overlays.remove('victory');
+    overlays.remove('gameover');
+    overlays.remove('Market');
+    overlays.remove('player');
+    overlays.add('main_menu');
   }
 
   void _onVictory()

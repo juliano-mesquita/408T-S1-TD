@@ -36,7 +36,19 @@ class CurrentLevel {
     _setupEnemyPath();
   }
 
-  void _setupEnemyPath() {
+  CurrentLevel copy()
+  {
+    return CurrentLevel(
+      enemySpawnRate: enemySpawnRate,
+      level: level,
+      map: map,
+      maxEnemies: maxEnemies,
+      playerHealth: playerHealth
+    );
+  }
+
+  void _setupEnemyPath()
+  {
     // Generates the enemy path
     for (int y = 0; y < map.height; y++) {
       final List<int> column = [];
@@ -303,8 +315,6 @@ class LevelController extends ValueNotifier<CurrentLevel?> {
       ),
     };
 
-    setCurrentLevel(2);
-
     gameController.addOnStartListener(_onStart);
     gameController.addOnPauseListener(_onPause);
     gameController.addOnResumeListener(_onResume);
@@ -338,11 +348,15 @@ class LevelController extends ValueNotifier<CurrentLevel?> {
     };
   }
 
-  void setCurrentLevel(int level) {
-    value = _levels[level];
+  void setCurrentLevel(int level)
+  {
+    value = _levels[level]?.copy();
   }
 
-  void _onStart() {
+  void _onStart()
+  {
+    playerController.health = 100;
+    setCurrentLevel(2);
     _setupEnemySpawn();
   }
 
@@ -395,7 +409,7 @@ class LevelController extends ValueNotifier<CurrentLevel?> {
       return;
     }
     enemy.deactivated = true;
-    playerController.health -= 1;
+    playerController.health -= 50;
 
     final deactivatedEnemyCount = currentLevel!.enemies.where(
       (enemy) => enemy.deactivated,

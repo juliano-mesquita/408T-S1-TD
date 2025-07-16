@@ -10,6 +10,8 @@ import 'package:flutter_towerdefense_game/game/tower_defense_game.dart';
 import 'package:flutter_towerdefense_game/provider/player_provider.dart';
 import 'package:flutter_towerdefense_game/repository/market_repository.dart';
 import 'package:flutter_towerdefense_game/repository/player_repository.dart';
+import 'package:flutter_towerdefense_game/widgets/end_screen/game_over_screen_widget.dart';
+import 'package:flutter_towerdefense_game/widgets/end_screen/victory_screen_widget.dart';
 import 'package:flutter_towerdefense_game/widgets/main_menu_widget.dart';
 import 'package:flutter_towerdefense_game/widgets/pause_menu_widget.dart';
 import 'package:flutter_towerdefense_game/widgets/player_hud_widget.dart';
@@ -43,21 +45,11 @@ void main() async
             },
             'victory': (context, _)
             {
-              return SizedBox.expand(
-                child: Container(
-                  color: Colors.green.withValues(alpha: 0.3),
-                  child: const Center(child: Text('Victory!')),
-                ),
-              );
+              return VictoryScreenWidget(onMenuButtonClicked: (){});
             },
             'gameover': (context, _)
             {
-              return SizedBox.expand(
-                child: Container(
-                  color: Colors.red.withValues(alpha: 0.3),
-                  child: const Center(child: Text('Game Over!')),
-                ),
-              );
+              return GameOverScreenWidget(onMenuButtonClicked: (){});
             }
           },
          )

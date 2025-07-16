@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flame/components.dart';
 import 'package:flutter_towerdefense_game/game/component/health_bar_component.dart';
 import 'package:flutter_towerdefense_game/game/enemy_component/enemy_component.dart';
+import 'package:flutter_towerdefense_game/models/enemy.dart';
 
 List<List<SpriteComponent>> makeDummyTiles(int w, int h) {
   return List.generate(
@@ -43,9 +44,11 @@ void main() {
         );
 
         final enemy =
-            EnemyComponent.build(
-                type: EnemyType.type1,
-                path: path,
+            EnemyComponent(
+                enemyData: Enemy.build(
+                  type: EnemyType.type1,
+                  path: path
+                ),
                 startPos: Vector2(0, 0),
                 tiles: tiles,
               )
@@ -78,9 +81,10 @@ void main() {
           [0, 1, 0],
         ];
         final enemy = EnemyComponent(
-          health: 100,
-          speed: 10,
-          path: path,
+          enemyData: Enemy.build(
+            type: EnemyType.type1,
+            path: path
+          ),
           startPos: Vector2(0, 0),
           tiles: makeDummyTiles(3, 3),
         );
@@ -97,9 +101,10 @@ void main() {
             [0, 0, 0],
           ];
           final enemy = EnemyComponent(
-            health: 100,
-            speed: 10,
-            path: path,
+            enemyData: Enemy.build(
+              type: EnemyType.type1,
+              path: path
+            ),
             startPos: Vector2(0, 0),
             tiles: makeDummyTiles(3, 3),
           );
@@ -115,9 +120,10 @@ void main() {
           [0, 0, 0],
         ];
         final enemy = EnemyComponent(
-          health: 100,
-          speed: 10,
-          path: path,
+          enemyData: Enemy.build(
+            type: EnemyType.type1,
+            path: path
+          ),
           startPos: Vector2(0, 0),
           tiles: makeDummyTiles(3, 2),
         );
@@ -143,9 +149,11 @@ void main() {
 
         // Instancia o EnemyComponent usando o construtor build
         final enemy =
-            EnemyComponent.build(
-                type: EnemyType.type1,
-                path: path,
+            EnemyComponent(
+                enemyData: Enemy.build(
+                  type: EnemyType.type1,
+                  path: path
+                ),
                 startPos: Vector2(0, 0),
                 tiles: tiles,
               )

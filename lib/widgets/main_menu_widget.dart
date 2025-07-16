@@ -17,12 +17,6 @@ class MainMenuWidget extends StatelessWidget
       body: SizedBox.expand(
         child: Stack(
           children: [
-            // SizedBox.expand(
-            //   child: Image.asset(
-            //     'assets/images/startscreen.png',
-            //     fit: BoxFit.contain,
-            //   ),
-            // ),
             Container(
               color: const Color(0xFF22B14C),
               child: Center(

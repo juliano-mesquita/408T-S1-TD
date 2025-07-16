@@ -71,6 +71,12 @@ class TowerDefenseGame extends FlameGame
       await Flame.images.load('indios_garimpeiros/garimpeiro_dois_vum.png'),
     );
 
+    await Flame.images.load('indios_garimpeiros/india_um.png');
+    await Flame.images.load('indios_garimpeiros/indio_dois.png');
+    await Flame.images.load('indios_garimpeiros/india_dois.png');
+    await Flame.images.load('indios_garimpeiros/indio_tres.png');
+    await Flame.images.load('indios_garimpeiros/mini_indio.png');
+    await Flame.images.load('indios_garimpeiros/india_dois.png');
     await Flame.images.load('pedra_dois.png');
   }
  

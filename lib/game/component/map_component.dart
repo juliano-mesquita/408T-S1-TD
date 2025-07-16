@@ -5,6 +5,7 @@ import 'package:flame/extensions.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_towerdefense_game/game/component/tile_component.dart';
+import 'package:flutter_towerdefense_game/game/market/market_item.dart';
 import 'package:flutter_towerdefense_game/game/market/market_service.dart';
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_attributes.dart';
@@ -12,6 +13,81 @@ import 'package:flutter_towerdefense_game/game/tower/tower_component.dart';
 import 'dart:math' as math;
 
 import 'package:flutter_towerdefense_game/models/map/tile_type.dart';
+
+class TowerData
+{
+  final int tier;
+  final double range;
+  final double damage;
+
+  final TowerAttributes attributes;
+
+  final String assetPath;
+  final double fireRate;
+
+  TowerData(
+    {
+      required this.tier,
+      required this.range,
+      required this.damage,
+      required this.attributes,
+      required this.assetPath,
+      required this.fireRate
+    }
+  );
+}
+
+Map<String, TowerData> _towers =
+{
+  'femea1': TowerData(
+    assetPath: 'indios_garimpeiros/india_um.png',
+    attributes: TowerAttributes(damageModifier: 1, reachModifier: 1),
+    damage: 5,
+    fireRate: 1,
+    range: 100,
+    tier: 1
+  ),
+  'macho2': TowerData(
+    assetPath: 'indios_garimpeiros/indio_dois.png',
+    attributes: TowerAttributes(damageModifier: 1, reachModifier: 1),
+    damage: 50,
+    fireRate: 1,
+    range: 100,
+    tier: 1
+  ),
+  'femea2': TowerData(
+    assetPath: 'indios_garimpeiros/india_dois.png',
+    attributes: TowerAttributes(damageModifier: 1, reachModifier: 1),
+    damage: 50,
+    fireRate: 1,
+    range: 100,
+    tier: 1
+  ),
+  'macho3': TowerData(
+    assetPath: 'indios_garimpeiros/indio_tres.png',
+    attributes: TowerAttributes(damageModifier: 1, reachModifier: 1),
+    damage: 50,
+    fireRate: 1,
+    range: 100,
+    tier: 1
+  ),
+  'miniindio': TowerData(
+    assetPath: 'indios_garimpeiros/mini_indio.png',
+    attributes: TowerAttributes(damageModifier: 1, reachModifier: 1),
+    damage: 50,
+    fireRate: 1,
+    range: 100,
+    tier: 1
+  ),
+  'cacique': TowerData(
+    assetPath: 'indios_garimpeiros/cacique.png',
+    attributes: TowerAttributes(damageModifier: 100, reachModifier: 100),
+    damage: 500,
+    fireRate: 1,
+    range: 1000,
+    tier: 1
+  ),
+};
 
 /// A component that generates a map based on provided tiles
 ///
@@ -35,10 +111,6 @@ class MapComponent extends PositionComponent {
 
   final Set<Vector2> _occupiedTowerPositions = {};
 
-  late final Sprite towerSprite;
-  late final Sprite enemySprite;
-  int playerHealth = 5;
-
   final MarketService market;
 
   MapComponent({required this.mapObject, required this.market});
@@ -46,12 +118,6 @@ class MapComponent extends PositionComponent {
   /// Finds the first top left road in them map
   @override
   Future<void> onLoad() async {
-    towerSprite = Sprite(
-      await Flame.images.load('indios_garimpeiros/indio_um.png'),
-    );
-    enemySprite = Sprite(
-      await Flame.images.load('indios_garimpeiros/garimpeira.png'),
-    );
 
     /// Set map scaled size
     _setMapScaledSize();
@@ -136,21 +202,22 @@ class MapComponent extends PositionComponent {
       return;
     }
     // _pendingTowerItem
-    final attributes = TowerAttributes(damageModifier: 1.0, reachModifier: 1.0);
+    final item = market.pendingTowerItem!;
+    final towerData = _towers[item.id]!;
 
     final tower =
         TowerComponent(
             mapPos: towerPosition,
-            towerType: '',
-            tier: 1,
-            range: 100,
-            damage: 20,
-            attributes: attributes,
-            fireRate: 1,
+            towerType: item.type.name,
+            tier: towerData.tier,
+            range: towerData.range,
+            damage: towerData.damage,
+            attributes: towerData.attributes,
+            fireRate: towerData.fireRate,
           )
           ..anchor = Anchor.center
           ..position = towerGlobalPosition
-          ..sprite = towerSprite
+          ..sprite = Sprite(Flame.images.fromCache(towerData.assetPath))
           ..size = Vector2.all(_tileSize);
     add(tower);
     _occupiedTowerPositions.add(towerPosition);

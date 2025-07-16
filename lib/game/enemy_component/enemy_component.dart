@@ -4,7 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_towerdefense_game/game/component/health_bar_component.dart';
 import 'package:flutter_towerdefense_game/models/enemy.dart';
 
-enum EnemyType { type1, type2, type3 }
+enum EnemyType
+{
+  garimpeira,
+  garimpeiro1,
+  garimpeiro2
+}
 
 class EnemyComponent extends SpriteComponent {
   final Enemy enemyData;

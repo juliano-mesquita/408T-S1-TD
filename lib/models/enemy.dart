@@ -5,6 +5,7 @@ class Enemy
 {
   late int health;
   late int speed;
+  late final int damage;
   final EnemyType type;
   final List<List<int>> path;
   bool deactivated = false;
@@ -16,17 +17,20 @@ class Enemy
     }
   ) {
     switch (type) {
-      case EnemyType.type1:
+      case EnemyType.garimpeira:
         health = 100;
+        damage = 5;
         // enemy movement may break if speed is set too high (it broke with 100 speed)
         speed = 50;
         break;
-      case EnemyType.type2:
+      case EnemyType.garimpeiro1:
         health = 200;
+        damage = 10;
         speed = 30;
         break;
-      case EnemyType.type3:
+      case EnemyType.garimpeiro2:
         health = 75;
+        damage = 15;
         speed = 80;
         break;
     }

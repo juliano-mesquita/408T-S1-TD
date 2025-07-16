@@ -16,7 +16,7 @@ class TowerDefenseGame extends FlameGame
   final LevelController _levelController;
   // Instanciando o mapa
   late MapComponent mapComponent;
-  late final Sprite _enemySprite;
+  final Map<EnemyType, Sprite> _enemiesSprite = {};
 
   TowerDefenseGame(
     {
@@ -33,11 +33,9 @@ class TowerDefenseGame extends FlameGame
   Future<void> onLoad() async
   {
     await super.onLoad();
-    _enemySprite = Sprite(
-      await Flame.images.load('indios_garimpeiros/garimpeira.png'),
-    );
-    await Flame.images.load('pedra_dois.png');
-   
+
+    await _setupAssets();
+
     await _levelController.init();
     _gameController.addOnStartListener(_onGameStart);
     _gameController.addOnPauseListener(_onPause);
@@ -59,6 +57,21 @@ class TowerDefenseGame extends FlameGame
     _levelController.removeOnVictoryListener(_onVictory);
     _levelController.removeOnGameOverListener(_onGameOver);
     super.onDispose();
+  }
+
+  Future<void> _setupAssets() async
+  {
+    _enemiesSprite[EnemyType.garimpeira] = Sprite(
+      await Flame.images.load('indios_garimpeiros/garimpeira.png'),
+    );
+    _enemiesSprite[EnemyType.garimpeiro1] = Sprite(
+      await Flame.images.load('indios_garimpeiros/garimpeiro_um_vum.png'),
+    );
+    _enemiesSprite[EnemyType.garimpeiro2] = Sprite(
+      await Flame.images.load('indios_garimpeiros/garimpeiro_dois_vum.png'),
+    );
+
+    await Flame.images.load('pedra_dois.png');
   }
  
   Future<void> _onGameStart() async
@@ -146,7 +159,7 @@ class TowerDefenseGame extends FlameGame
           _levelController.enemyDeath(enemy);
         },
       )
-      ..sprite = _enemySprite
+      ..sprite = _enemiesSprite[enemy.type]
       ..size = enemySize
       ..anchor = Anchor.center
       ..position = Vector2(

@@ -68,7 +68,7 @@ class TowerComponent extends SpriteComponent with HasGameRef {
     final projectile = ProjectileComponent(
       target: target!,
       startPosition: position.clone(),
-      speed: 200, // pixels/segundo
+      speed: 550, // pixels/segundo
       damage: damage,
       sprite: Sprite(gameRef.images.fromCache('indios_garimpeiros/cacique.png')),
     );

@@ -55,7 +55,15 @@ void main() async
               return SizedBox.expand(
                 child: Container(
                   color: Colors.red.withValues(alpha: 0.3),
-                  child: const Center(child: Text('Game Over!')),
+                  child: Center(
+                    child: ElevatedButton(
+                      child: const Text('Game Over!'),
+                      onPressed: ()
+                      {
+                        GetIt.I<GameController>().goToMainMenu();
+                      }
+                    )
+                  ),
                 ),
               );
             }

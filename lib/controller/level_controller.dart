@@ -15,7 +15,7 @@ typedef OnEnemySpawn = void Function(Enemy enemy);
 class CurrentLevel {
   final int level;
   final MapObject map;
-  final int maxEnemies;
+  final List<EnemyType> enemisToSpawn;
   final List<Enemy> enemies;
   final int enemySpawnRate;
   int playerHealth;
@@ -26,13 +26,20 @@ class CurrentLevel {
         _enemyPath.map((e) => List.unmodifiable(e).cast<int>()),
       ).cast();
 
-  CurrentLevel({
-    required this.level,
-    required this.map,
-    required this.maxEnemies,
-    required this.enemySpawnRate,
-    this.playerHealth = 100,
-  }) : enemies = [] {
+  int get maxEnemies => enemisToSpawn.length;
+
+  CurrentLevel(
+    {
+      required this.level,
+      required this.map,
+      required this.enemisToSpawn,
+      required this.enemySpawnRate,
+      this.playerHealth = 100
+    }
+  )
+    :
+      enemies = []
+  {
     _setupEnemyPath();
   }
 
@@ -42,7 +49,7 @@ class CurrentLevel {
       enemySpawnRate: enemySpawnRate,
       level: level,
       map: map,
-      maxEnemies: maxEnemies,
+      enemisToSpawn: List.from(enemisToSpawn),
       playerHealth: playerHealth
     );
   }
@@ -103,113 +110,7 @@ class LevelController extends ValueNotifier<CurrentLevel?> {
     _levels = {
       1: CurrentLevel(
         level: 1,
-        maxEnemies: 10,
-        enemySpawnRate: 2,
-        map: MapObject(
-          // largura
-          width: 11,
-          // altura
-          height: 7,
-          tilesToSprite: tilesToSprite,
-          // O mapa em sí. Os pontos contendo o caminho são representados por 1
-          points: [
-            [
-              TileType.grass,
-              TileType.grass,
-              TileType.road,
-              TileType.road,
-              TileType.road,
-              TileType.road,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-            ],
-            [
-              TileType.grass,
-              TileType.grass,
-              TileType.road,
-              TileType.grass,
-              TileType.grass,
-              TileType.road,
-              TileType.grass,
-              TileType.road,
-              TileType.road,
-              TileType.road,
-              TileType.grass,
-            ],
-            [
-              TileType.road,
-              TileType.road,
-              TileType.road,
-              TileType.grass,
-              TileType.grass,
-              TileType.road,
-              TileType.grass,
-              TileType.road,
-              TileType.grass,
-              TileType.road,
-              TileType.grass,
-            ],
-            [
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.road,
-              TileType.road,
-              TileType.road,
-              TileType.road,
-              TileType.road,
-              TileType.grass,
-              TileType.road,
-              TileType.road,
-            ],
-            [
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.road,
-              TileType.grass,
-              TileType.road,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-            ],
-            [
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.road,
-              TileType.road,
-              TileType.road,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-            ],
-            [
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-            ],
-          ],
-        ),
-      ),
-      2: CurrentLevel(
-        level: 2,
-        maxEnemies: 15,
+        enemisToSpawn: List.generate(5, (_) => EnemyType.garimpeiro1),
         enemySpawnRate: 1,
         map: MapObject(
           // largura
@@ -219,100 +120,47 @@ class LevelController extends ValueNotifier<CurrentLevel?> {
           tilesToSprite: tilesToSprite,
           // O mapa em sí. Os pontos contendo o caminho são representados por 1
           points: [
-            [
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-            ],
-            [
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.road,
-              TileType.road,
-              TileType.road,
-              TileType.grass,
-            ],
-            [
-              TileType.road,
-              TileType.road,
-              TileType.road,
-              TileType.road,
-              TileType.road,
-              TileType.road,
-              TileType.grass,
-              TileType.road,
-              TileType.grass,
-              TileType.road,
-              TileType.grass,
-            ],
-            [
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.road,
-              TileType.road,
-              TileType.road,
-              TileType.grass,
-              TileType.road,
-              TileType.road,
-            ],
-            [
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-            ],
-            [
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-            ],
-            [
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-              TileType.grass,
-            ],
-          ],
-        ),
+            [TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass],
+            [TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.road,  TileType.road,  TileType.road,  TileType.grass],
+            [TileType.road,  TileType.road,  TileType.road,  TileType.road,  TileType.road,  TileType.road,  TileType.grass, TileType.road,  TileType.grass, TileType.road,  TileType.grass],
+            [TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.road,  TileType.road,  TileType.road,  TileType.grass, TileType.road,  TileType.road],
+            [TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass],
+            [TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass],
+            [TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass],
+          ]
+        )
       ),
+      2: CurrentLevel(
+        level: 2,
+        enemisToSpawn: [
+          EnemyType.garimpeira,
+          EnemyType.garimpeira,
+          EnemyType.garimpeira,
+          EnemyType.garimpeiro1,
+          EnemyType.garimpeira,
+          EnemyType.garimpeira,
+          EnemyType.garimpeira,
+          EnemyType.garimpeiro1
+        ],
+        enemySpawnRate: 2,
+        map: MapObject(
+          // largura
+          width: 11,
+          // altura
+          height: 7,
+          tilesToSprite: tilesToSprite,
+          // O mapa em sí. Os pontos contendo o caminho são representados por 1
+          points: [
+            [TileType.grass, TileType.grass, TileType.road, TileType.road, TileType.road, TileType.road, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass],
+            [TileType.grass, TileType.grass, TileType.road,  TileType.grass,  TileType.grass, TileType.road, TileType.grass, TileType.road, TileType.road, TileType.road, TileType.grass],
+            [TileType.road,  TileType.road,  TileType.road,  TileType.grass, TileType.grass, TileType.road, TileType.grass, TileType.road, TileType.grass, TileType.road, TileType.grass],
+            [TileType.grass, TileType.grass, TileType.grass, TileType.road, TileType.road, TileType.road, TileType.road, TileType.road, TileType.grass, TileType.road, TileType.road],
+            [TileType.grass, TileType.grass, TileType.grass, TileType.road, TileType.grass, TileType.road, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass],
+            [TileType.grass, TileType.grass, TileType.grass, TileType.road, TileType.road, TileType.road, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass],
+            [TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass, TileType.grass],
+          ]
+        )
+      )
     };
 
     gameController.addOnStartListener(_onStart);
@@ -356,7 +204,7 @@ class LevelController extends ValueNotifier<CurrentLevel?> {
   void _onStart()
   {
     playerController.health = 100;
-    setCurrentLevel(2);
+    setCurrentLevel((currentLevel?.level ?? 0) + 1);
     _setupEnemySpawn();
   }
 
@@ -389,13 +237,12 @@ class LevelController extends ValueNotifier<CurrentLevel?> {
   void _addEnemy(CurrentLevel level) {
     if (level.enemies.length >= level.maxEnemies) {
       return;
-    }
+    }    
+    final enemyToSpawnIndex = level.enemies.length;
+    final enemyToSpawn = level.enemisToSpawn[enemyToSpawnIndex];
     final enemy = Enemy.build(
-      type: EnemyType.type1,
-      path:
-          List.from(
-            level.enemyPath.map((e) => List.from(e).cast<int>()),
-          ).cast(),
+      type: enemyToSpawn,
+      path: List.from(level.enemyPath.map((e) => List.from(e).cast<int>())).cast()
     );
     level.enemies.add(enemy);
     _notifyOnEnemySpawnListeners(enemy);
@@ -409,7 +256,7 @@ class LevelController extends ValueNotifier<CurrentLevel?> {
       return;
     }
     enemy.deactivated = true;
-    playerController.health -= 50;
+    playerController.health -= enemy.damage;
 
     final deactivatedEnemyCount = currentLevel!.enemies.where(
       (enemy) => enemy.deactivated,

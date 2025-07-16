@@ -1,25 +1,37 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_towerdefense_game/controller/player_controller.dart';
 import 'package:flutter_towerdefense_game/game/market/market_service.dart';
 import 'package:flutter_towerdefense_game/game/market/market_item.dart';
-import 'package:flutter_towerdefense_game/game/market/market_inventory.dart';
+import 'package:flutter_towerdefense_game/game/player/player.dart';
 import 'package:flutter_towerdefense_game/game/player/player_wallet.dart';
 import 'package:flutter_towerdefense_game/game/player/inventory/player_inventory.dart';
+import 'package:mockito/mockito.dart';
+
+import '../../__mocks__/mock_market_inventory_controller.dart';
+import '../../__mocks__/mock_player_controller.dart';
 
 void main() {
-  group('Market.buyItem()', () {
-    late Market market;
+  group('MarketService.buyItem()', () {
+    late MarketService market;
     late PlayerWallet wallet;
     late PlayerInventory inventory;
-    late MarketInventory marketInventory;
+
+    late MockMarketInventoryController marketInventoryController;
+    late PlayerController playerController;
 
     setUp(() {
+      marketInventoryController = MockMarketInventoryController();
+      playerController = MockPlayerController();
+
       wallet = PlayerWallet(balance: 100);
       inventory = PlayerInventory(inventorySize: 5);
-      marketInventory = MarketInventory(items: []);
-      market = Market(
-        marketInventory: marketInventory,
-        playerWallet: wallet,
-        playerInvetory: inventory,
+      market = MarketService(
+        playerController: playerController,
+        marketInventoryController: marketInventoryController,
+      );
+
+      when(playerController.player).thenReturn(
+        Player(name: 'example', wallet: wallet, inventory: inventory),
       );
     });
 

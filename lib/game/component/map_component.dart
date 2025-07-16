@@ -6,7 +6,6 @@ import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_towerdefense_game/game/component/tile_component.dart';
 import 'package:flutter_towerdefense_game/game/market/market_service.dart';
-import 'package:flutter_towerdefense_game/game/market/market_item.dart';
 import 'package:flutter_towerdefense_game/game/schema/map_object.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_attributes.dart';
 import 'package:flutter_towerdefense_game/game/tower/tower_component.dart';
@@ -120,8 +119,7 @@ class MapComponent extends PositionComponent {
 
     final towerGlobalPosition = Vector2(left, top);
 
-    if(market.pendingTowerItem == null)
-    {
+    if (market.pendingTowerItem == null) {
       return;
     }
 

@@ -51,11 +51,21 @@ void main() async
             },
             'victory': (context, _)
             {
-              return VictoryScreenWidget(onMenuButtonClicked: (){});
+              return VictoryScreenWidget(
+                onMenuButtonClicked: ()
+                {
+                  GetIt.I<GameController>().goToMainMenu();
+                }
+              );
             },
             'gameover': (context, _)
             {
-              return GameOverScreenWidget(onMenuButtonClicked: (){});
+              return GameOverScreenWidget(
+                onMenuButtonClicked: ()
+                {
+                  GetIt.I<GameController>().goToMainMenu();
+                }
+              );
             }
           },
          )

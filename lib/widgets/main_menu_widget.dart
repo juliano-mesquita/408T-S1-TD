@@ -14,16 +14,29 @@ class MainMenuWidget extends StatelessWidget
     return Scaffold
     (
       backgroundColor: Colors.black,
-      body: SizedBox.expand
-      (
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children:
-          [
-            ElevatedButton(
+      body: SizedBox.expand(
+        child: Stack(
+          children: [
+            // SizedBox.expand(
+            //   child: Image.asset(
+            //     'assets/images/startscreen.png',
+            //     fit: BoxFit.contain,
+            //   ),
+            // ),
+            Container(
+              color: const Color(0xFF22B14C),
+              child: Center(
+                child: Image.asset(
+                  'assets/images/startscreen.png',
+                  fit: BoxFit.contain,
+                ),
+              )
+            ),
+            Center(
+                child: ElevatedButton(
               onPressed: gameController.start,
               child: const Text('Iniciar Jogo'),
+            )
             )
           ],
         ),
